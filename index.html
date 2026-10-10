@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Woosol Lee</title>
+<meta name="description" content="Woosol Lee — graphic design portfolio: signage, branding, space, editorial.">
+<meta property="og:title" content="Woosol Lee">
+<meta property="og:type" content="website">
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+</head>
+<body>
+<link data-keep rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&display=swap">
+<link data-keep rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Liter&display=swap">
+<style id="css">
+/* Layout: 상단 고정 헤더(이름 / Info) + 프로젝트가 세로로 쌓이는 스택. 각 프로젝트 = 구분선 → 텍스트 3단 → 높이를 맞춘 이미지 행 */
+:root{
+  --bg:#fbfbf9; --fg:#14161a; --muted:#6b7078; --rule:#14161a; --hair:#d9dad6;
+  --ph-a:#e6e7e2; --ph-b:#d8dad4; --ph-c:#eeeeea; --accent:#1447c8;
+  /* 영문·숫자: Liter / 한글: Noto Sans KR */
+  --sans:"Liter","Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --mono:var(--sans);
+  --gutter:clamp(16px,2.4vw,36px); --gap:clamp(6px,.8vw,12px);
+  --band:#0c0c0d; --band-fg:#f4f4f1; /* 상단 띠 색 */
+  --map-bg:#0b0b0c; --map-fg:#f4f4f1; --map-line:#2a2b2e; --map-line2:#17181a; /* MAP 화면: 항상 검정 */
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#101114; --fg:#ecece8; --muted:#9a9ea6; --rule:#ecece8; --hair:#2c2e33;
+  --ph-a:#1d1f23; --ph-b:#26282d; --ph-c:#18191d; --accent:#8fb0ff; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#101114; --fg:#ecece8; --muted:#9a9ea6; --rule:#ecece8; --hair:#2c2e33;
+  --ph-a:#1d1f23; --ph-b:#26282d; --ph-c:#18191d; --accent:#8fb0ff; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;word-break:keep-all}
+a{color:inherit;text-decoration:none}
+a:hover{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+p{margin:0}
+
+.top,.project,.info,footer{padding-inline:var(--gutter)}
+.top{transition:background-color .3s,color .3s}
+.top a:hover{color:inherit;text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--band);color:var(--band-fg);
+  display:flex;justify-content:space-between;align-items:center;gap:16px;
+  padding-block:14px;font-size:1.0625rem;font-weight:500}
+.top a[aria-current]{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
+
+.tabs{display:flex;gap:6px;align-items:center;min-width:0}
+.genre{position:relative}
+/* GENRE를 누르면 아래로 펼쳐지는 태그 목록 */
+.menu{position:absolute;top:calc(100% + 8px);left:0;z-index:6;display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.menu .pill{background:var(--band)}
+/* 상단 탭: 둥근 라인(버블). 선택된 탭은 채워짐 */
+.pill{border:1px solid currentColor;border-radius:999px;padding:1px 13px 2px;font:inherit;font-size:.9375rem;font-weight:400;line-height:1.5;
+  letter-spacing:.02em;white-space:nowrap;background:none;color:inherit;cursor:pointer}
+.top .pill:hover,.top .pill[aria-current],.top .pill[aria-expanded="true"]{background:var(--band-fg);color:var(--band);border-color:var(--band-fg);text-decoration:none}
+.kind a:hover{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+.empty{padding:clamp(40px,8vw,96px) var(--gutter);color:var(--muted)}
+.right{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.label{font-family:var(--mono);font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* ── 프로젝트 스택 ── */
+/* 프로젝트마다 --pbg(배경) / --pfg(글자)를 받아 그 안의 보조색을 모두 여기서 파생 */
+.project{background:var(--pbg);color:var(--pfg);padding-block:20px;
+  --fg:var(--pfg);--accent:var(--pfg);
+  --muted:color-mix(in srgb,var(--pfg) 68%,var(--pbg));
+  --hair:color-mix(in srgb,var(--pfg) 24%,var(--pbg));
+  --ph-a:color-mix(in srgb,var(--pfg) 10%,var(--pbg));
+  --ph-b:color-mix(in srgb,var(--pfg) 17%,var(--pbg));
+  --ph-c:color-mix(in srgb,var(--pfg) 6%,var(--pbg))}
+.project a:hover{text-decoration:underline}
+.project{position:relative}
+/* 왼쪽 아래의 얇은 아래 화살표: 다음 프로젝트로 이동 */
+.down{position:absolute;left:var(--gutter);bottom:20px;width:52px;height:64px;margin-left:-1px;padding:0;border:0;background:none;color:inherit;cursor:pointer;display:grid;place-items:center}
+.down svg{width:50px;height:60px;fill:none;stroke:currentColor;stroke-width:1;vector-effect:non-scaling-stroke}
+.text{padding-bottom:84px}
+/* 위: 프로젝트 성격 한 줄 / 아래: 왼쪽 1/5 텍스트 + 오른쪽 4/5 이미지 */
+.kind{display:block;text-align:center;font-size:.9375rem;line-height:1.2;margin-bottom:12px}
+.body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,4fr);gap:var(--gutter);align-items:start}
+.text{display:flex;flex-direction:column;gap:20px}
+.text h2{margin:0;font-size:clamp(1.3125rem,1.8vw,1.625rem);font-weight:400;line-height:1.25;letter-spacing:-.01em}
+.text .year{margin-top:8px;font-family:var(--mono);font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.desc{max-width:62ch;font-size:.875rem;white-space:pre-wrap}
+.meta{display:flex;flex-direction:column;gap:12px;margin:0;font-size:.875rem}
+.meta dt{margin-bottom:1px}
+.meta dd{margin:0}
+.meta > div{position:relative}
+
+.rows{display:flex;flex-direction:column;gap:var(--gap)}
+.row{display:flex;gap:var(--gap)}
+.ph{flex:var(--r) 1 0;min-width:0;max-width:100%;aspect-ratio:var(--r);margin:0;position:relative;overflow:hidden}
+/* 장들은 같은 자리에 겹쳐 두고 한 장만 보임(옆 장이 가장자리에 비치지 않도록) */
+.track{position:absolute;inset:0}
+.slide{position:absolute;inset:0;overflow:hidden;visibility:hidden;background:var(--ph-a)}
+.slide.on{visibility:visible}
+.slide:nth-child(even),.ph + .ph .slide:nth-child(odd){background:var(--ph-b)}
+.ph + .ph .slide:nth-child(even){background:var(--ph-a)}
+.slide img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.slide .phl{position:absolute;left:10px;bottom:8px;font-family:var(--mono);font-size:.6875rem;letter-spacing:.06em;color:var(--muted)}
+/* 여러 장이 든 칸: 양옆 화살표 + 장수 표시 */
+.nav{position:absolute;top:0;bottom:0;width:56px;pointer-events:none;border:0;padding:0;cursor:pointer;background:none;
+  color:var(--arrow,#fff);display:grid;place-items:center;opacity:0;transition:opacity .18s}
+.nav svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:square}
+.nav.prev{left:0}.nav.next{right:0}
+.ph:hover .nav,.nav:focus-visible{opacity:1}
+/* 마우스가 있는 기기: 슬라이드 위에서 커서 자체가 "2/5" 숫자로 바뀜 */
+.ph.multi{cursor:pointer}
+@media (hover:hover){.count{display:none}.ph.multi{cursor:none}}
+#cur{position:fixed;left:0;top:0;z-index:10;pointer-events:none;transform:translate(-50%,-50%);color:#fff;
+  font-size:1.0625rem;font-weight:500;letter-spacing:.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.count{position:absolute;right:10px;bottom:8px;padding:2px 8px;border-radius:999px;background:var(--pbg);color:var(--pfg);
+  font-size:.6875rem;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+
+/* ── MAP: 검은 바탕 + 바둑판 그리드 + 가운데 십자 화살표 축, 좌표에 프로젝트 섬네일 ── */
+#view-map{background:var(--map-bg);color:var(--map-fg)}
+.map{position:relative;height:calc(100vh - var(--top-h,54px));height:calc(100svh - var(--top-h,54px));min-height:460px;overflow:hidden;
+  /* 큰 격자 120px + 그 안을 10등분한 더 연한 격자 12px. 둘 다 한가운데에 선이 오도록 맞춤 */
+  background-image:linear-gradient(var(--map-line) 1px,transparent 1px),linear-gradient(90deg,var(--map-line) 1px,transparent 1px),
+    linear-gradient(var(--map-line2) 1px,transparent 1px),linear-gradient(90deg,var(--map-line2) 1px,transparent 1px);
+  background-size:120px 120px,120px 120px,12px 12px,12px 12px;
+  background-position:calc(50% + 60px) calc(50% + 60px),calc(50% + 60px) calc(50% + 60px),calc(50% + 6px) calc(50% + 6px),calc(50% + 6px) calc(50% + 6px)}
+.ax{position:absolute;background:var(--map-fg)}
+.ax.x{left:28px;right:28px;top:50%;height:1px}
+.ax.y{top:44px;bottom:44px;left:50%;width:1px}
+.ax::before,.ax::after{content:"";position:absolute;width:9px;height:9px;border:solid var(--map-fg);border-width:1px 1px 0 0}
+.ax.x::before{left:0;top:-4px;transform:rotate(-135deg)}
+.ax.x::after{right:0;top:-4px;transform:rotate(45deg)}
+.ax.y::before{top:0;left:-4px;transform:rotate(-45deg)}
+.ax.y::after{bottom:0;left:-4px;transform:rotate(135deg)}
+.axl{position:absolute;font-size:.75rem;letter-spacing:.16em;line-height:1}
+.axl.up{top:18px;left:50%;transform:translateX(-50%)}
+.axl.down{bottom:18px;left:50%;transform:translateX(-50%)}
+.axl.left{left:28px;top:calc(50% - 26px)}
+.axl.right{right:28px;top:calc(50% - 26px)}
+.pin,.pin:hover{color:var(--map-fg)}
+.pin{position:absolute;transform:translate(-50%,-50%);width:clamp(22px,2.2vw,32px);z-index:1}
+.pin:hover,.pin:focus-visible{z-index:3}
+/* 프로젝트 = 그 프로젝트 배경색의 분류 아이콘. 어두운 색은 흰 테두리로 보이게 */
+.ic{display:block;width:100%;height:auto;overflow:visible}
+.ic .cut{fill:none;stroke:var(--map-bg);stroke-width:1.2}
+.ic.ring :not(.cut){stroke:var(--map-fg);stroke-width:.8;paint-order:stroke}
+.ic.ring .cut{stroke:var(--map-fg);stroke-width:.6}
+.pin:hover .ic,.pin:focus-visible .ic{transform:scale(1.7)}
+/* 설명: 커진 섬네일 옆에 뜸. 오른쪽에 있는 섬네일은 왼쪽으로 뜸 */
+.cap{position:absolute;top:50%;left:calc(135% + 12px);transform:translateY(-50%);width:min(240px,38vw);display:flex;flex-direction:column;gap:4px;
+  padding:8px 10px;background:var(--map-bg);font-size:.8125rem;line-height:1.4;opacity:0;pointer-events:none}
+.pin.flip .cap{left:auto;right:calc(135% + 14px);text-align:right}
+.pin:hover .cap,.pin:focus-visible .cap{opacity:1}
+.cap .cimg{display:block;position:relative;aspect-ratio:4/3;overflow:hidden;margin-bottom:4px}
+.cap .cimg img{position:absolute;inset:0;width:100%;height:100%}
+.cap b{font-size:.9375rem;font-weight:500}
+.cap .sub{opacity:.65}
+.cap .line{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+
+/* ── Info ── */
+/* 엔딩 크레딧식: 검은 바탕, 3등분 컬럼, 왼쪽 정렬, 소분류는 들여쓰기 */
+#view-info{background:var(--map-bg);color:var(--map-fg);--fg:var(--map-fg);--bg:var(--map-bg);min-height:calc(100vh - var(--top-h,54px))}
+.info{padding-block:clamp(28px,4vw,56px) clamp(56px,9vw,120px);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px var(--gutter);
+  font-size:clamp(1rem,1.3vw,1.25rem);line-height:1.35}
+.cr{display:flex;flex-direction:column;gap:1.15em;--in:clamp(20px,3.4vw,52px);min-width:0}
+.b{display:flex;flex-direction:column;align-items:flex-start}
+.b.l1{padding-left:var(--in)}
+.b.l2{padding-left:calc(var(--in)*2)}
+.b h3{margin:0;font:inherit;font-weight:500;text-transform:uppercase;letter-spacing:.02em}
+.b.l1 h3::before{content:"—"}
+.b p{max-width:30em;white-space:pre-wrap}
+.addr{user-select:all;overflow-wrap:anywhere}
+.copy{font:inherit;font-size:.6875rem;letter-spacing:.08em;text-transform:uppercase;
+  background:none;color:var(--fg);border:1px solid var(--fg);padding:5px 10px;cursor:pointer;margin-top:8px}
+.copy:hover{background:var(--fg);color:var(--bg)}
+
+footer{border-top:1px solid var(--hair);padding-block:14px 28px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* ── 태블릿 ── */
+@media (max-width:1000px){
+  .body{grid-template-columns:minmax(0,3fr) minmax(0,7fr)}
+}
+/* ── 모바일: 텍스트 1단, 이미지 칸은 한 줄에 하나씩 ── */
+@media (max-width:760px){.info{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:640px){
+  .body{grid-template-columns:minmax(0,1fr);gap:24px}
+  .text{padding-bottom:0}
+  .project{padding-bottom:96px}
+  .top{flex-wrap:wrap;gap:8px}
+  .pill{padding:1px 9px 2px;font-size:.8125rem}
+  .row{flex-direction:column}
+  .row .ph{flex:none;width:100%}
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+
+/* ── Vimeo 칸: 새 탭으로 여는 카드 ── */
+.vid{position:absolute;inset:0;display:grid;place-items:center;background:var(--ed-bg);color:var(--ed-fg)}
+.vid:hover{color:var(--ed-fg)}
+.vid .play{width:0;height:0;border-style:solid;border-width:16px 0 16px 26px;border-color:transparent transparent transparent currentColor}
+.vid .vl{position:absolute;left:10px;bottom:8px;font-size:.75rem;letter-spacing:.06em}
+
+/* ── 암호 입력(이름 세 번 클릭) ── */
+.home{position:relative;display:inline-flex;align-items:center;min-height:1.6em}
+.lockbox{position:relative;display:inline-flex;align-items:center}
+.dots{display:inline-flex;gap:9px;align-items:center}
+.dots i{width:9px;height:9px;border-radius:50%;border:1px solid currentColor}
+.dots i.on{background:currentColor}
+#pin-in{position:absolute;inset:-6px;width:calc(100% + 12px);opacity:0;border:0;padding:0;font-size:16px}
+
+/* ── 편집 모드 ── */
+:root{--ed-bg:#111214;--ed-fg:#f4f4f1;--ed-warn:#ffb4a6}
+body.editing{padding-bottom:72px}
+body.editing [contenteditable]{outline:1px dashed color-mix(in srgb,currentColor 50%,transparent);outline-offset:3px;min-width:2em;min-height:1.3em;cursor:text}
+body.editing [contenteditable]:focus{outline-style:solid}
+body.editing .ph.multi{cursor:default}
+body.editing .slide img{cursor:grab;touch-action:none}
+.eb{font:500 12px/1.2 system-ui,sans-serif;letter-spacing:0;text-transform:none;display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border:1px solid var(--ed-bg);border-radius:5px;
+  background:var(--ed-bg);color:var(--ed-fg);cursor:pointer;white-space:nowrap}
+.eb:hover{background:var(--ed-fg);color:var(--ed-bg)}
+.eb.warn{border-color:var(--ed-warn);color:var(--ed-warn)}
+.eb.x{padding:2px 7px;position:absolute;right:0;top:0}
+select.eb{appearance:auto}
+.eb input[type=color]{width:22px;height:18px;padding:0;border:0;background:none}
+.eb.zoom input{width:84px}
+.stools .eb{border-color:color-mix(in srgb,var(--ed-fg) 35%,var(--ed-bg))}
+.text > .eb{align-self:flex-start}
+.stools{position:absolute;left:8px;right:8px;top:8px;z-index:2;display:flex;flex-wrap:wrap;gap:4px}
+.vimeo-in{font:13px system-ui,sans-serif;padding:5px 8px;border:1px solid var(--ed-bg);border-radius:5px;background:var(--ed-fg);color:var(--ed-bg);width:min(240px,100%)}
+.ptools,.rtools{display:flex;flex-wrap:wrap;gap:6px}
+.ptools{justify-content:flex-end;margin-bottom:12px}
+.rtools{justify-content:flex-end}
+.kind .chip{font:inherit;color:inherit;background:none;border:1px solid currentColor;border-radius:999px;padding:1px 11px 2px;margin:0 2px 4px;cursor:pointer;opacity:.55}
+.kind .chip[aria-pressed="true"]{opacity:1;background:var(--pfg);color:var(--pbg)}
+.btools{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.cr > .eb{align-self:flex-start}
+body.editing .pin{cursor:move;touch-action:none}
+#edbar{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;flex-wrap:wrap;gap:8px;align-items:center;
+  padding:10px var(--gutter) calc(10px + env(safe-area-inset-bottom,0px));background:var(--ed-bg);color:var(--ed-fg);font:13px/1.3 system-ui,sans-serif}
+#edbar .eb{border-color:var(--ed-fg)}
+#edbar .st{flex:1 1 160px;min-width:0;opacity:.8}
+
+/* 행 사이 막대: 끌어서 위아래 사진 높이 비율 조정 */
+.row{position:relative}
+.row > .rtools{position:absolute;right:8px;bottom:8px;z-index:2}
+.rsize{position:absolute;left:50%;bottom:calc(var(--gap) / -2 - 9px);transform:translateX(-50%);z-index:3;width:120px;height:18px;display:grid;place-items:center;cursor:ns-resize;touch-action:none}
+.rsize i{width:72px;height:6px;border-radius:3px;background:var(--pfg);border:1px solid var(--pbg);opacity:.8}
+.rsize:hover i{opacity:1}
+body.picking .slide img{cursor:crosshair}
+@media (max-width:640px){.rsize{display:none}}
+
+/* ── LIST 보기: 프로젝트마다 그 프로젝트 색의 띠 한 줄(제목 · 연도 · 성격 · 분류). 누르면 그 자리에서 펼쳐짐 ── */
+.top .pill[aria-pressed="true"]{background:var(--band-fg);color:var(--band);border-color:var(--band-fg)}
+.lrow{display:none}
+body.listing .project{padding-block:0}
+body.listing .lrow{display:grid;grid-template-columns:minmax(0,8fr) 5em minmax(0,3fr);gap:var(--gutter);align-items:baseline;width:100%;
+  padding:13px 0 14px;border:0;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+body.listing .lrow .lt{font-size:clamp(1.0625rem,1.5vw,1.375rem);line-height:1.25}
+body.listing .lrow .ly,body.listing .lrow .lc{font-size:.875rem;font-variant-numeric:tabular-nums}
+body.listing .lrow:hover .lt{text-decoration:underline;text-underline-offset:4px;text-decoration-thickness:1px}
+body.listing .project:not(.open) > :not(.lrow){display:none}
+body.listing .project.open{padding-bottom:20px}
+body.listing .project.open > .kind,body.listing .project > .down{display:none}
+body.listing .project.open .text{padding-bottom:0}
+body.listing.editing .project.open > .kind{display:block;margin-top:4px}
+@media (max-width:640px){
+  body.listing .lrow{grid-template-columns:minmax(0,1fr) auto;gap:2px 12px}
+  body.listing .lrow .lc{grid-column:1/-1}
+}
+
+/* 파일을 끌어 올린 칸 표시 */
+.ph.drop{outline:3px dashed var(--pfg);outline-offset:-6px}
+.ph.drop .track{opacity:.55}
+</style>
+<template id="shell">
+<header class="top">
+  <span class="home"><a href="#all" id="nav-home">WOOSOL LEE</a><span class="lockbox" id="lockbox" hidden><span class="dots" id="dots"><i></i><i></i><i></i><i></i></span><input id="pin-in" type="text" inputmode="numeric" autocomplete="off" maxlength="4" aria-label="Passcode"></span></span>
+  <nav class="right" aria-label="Sections">
+    <button type="button" class="pill" id="nav-list" aria-pressed="false">LIST</button>
+    <div class="genre">
+      <button type="button" class="pill" id="genre-btn" aria-expanded="false" aria-controls="tags">GENRE</button>
+      <div class="menu" id="tags" hidden></div>
+    </div>
+    <a href="#map" class="pill" id="nav-map">MAP</a>
+    <a href="#info" class="pill" id="nav-info">INFO</a>
+    <button type="button" id="lang-btn" class="pill">KO</button>
+    <button type="button" id="nav-edit" class="pill" aria-pressed="false">EDIT</button>
+  </nav>
+</header>
+
+<main id="view-work"></main>
+<p class="empty" id="empty" hidden></p>
+<div id="cur" hidden aria-hidden="true"></div>
+
+<main id="view-map" hidden>
+  <div class="map">
+    <div class="ax x"></div><div class="ax y"></div>
+    <span class="axl up">HUGE</span><span class="axl down">TINY</span>
+    <span class="axl left">TIME</span><span class="axl right">SPACE</span>
+    <div id="pins"></div>
+  </div>
+</main>
+
+<main id="view-info" hidden>
+  <section class="info" id="info"></section>
+</main>
+
+<footer class="label">
+  <span>© 2026 Woosol Lee</span>
+  <a href="#all" id="to-top"></a>
+</footer>
+<div id="edbar" hidden><b>EDIT</b><span class="st" id="ed-status" role="status"></span><button type="button" class="eb" data-a="p-add" id="ed-add"></button><button type="button" class="eb" data-a="save" id="ed-save"></button><button type="button" class="eb" data-a="exit" id="ed-exit"></button></div>
+</template>
+<script type="application/json" id="site-data">{"rev":1791547449193,"tags":["signage","branding","space","exhibition","editorial","poster","art"],"projects":[{"title":"Beyond words, Our voices","year":"2026","tags":["exhibition"],"bg":"#0896ba","fg":"#ffffff","map":[0.43,-0.2],"desc":{"ko":"","en":"Project description"},"meta":[{"k":"Client","ko":"매향리 평화기념관","en":""},{"k":"Role","ko":"PM","en":""}],"rows":[[{"r":1.78,"items":[{"src":"img/mv0w4yl7qbmqhb.jpg","x":50,"y":50,"z":1},{"src":"img/mv0w4yl7shpd1u.jpg","x":51.131991366366364,"y":56.31686667920009,"z":1.11}]}],[{"r":1.78,"items":[{"src":"img/mv0w4yl7wrws5g.jpg","x":53.877239767839065,"y":36.83168699415468,"z":3,"fit":"contain","bg":"#171717"}]},{"r":1.78,"items":[{"src":"img/mv0w4yl7kaku7h.jpg","x":50,"y":50,"z":1}]}]]},{"title":"Dental Critic","year":"2025","tags":["exhibition"],"map":[-0.25,0.1],"desc":{"ko":"덴탈크리틱은 2025년 공간 ‘수건과 화환’에서 서울문화재단 예술창작활동지원사업을 통해 진행된 전시로, 비평 텍스트, 특히 팀 구성으로 활동하는 비평을 중점적으로 다룬다. 치아는 언어의 발화를 위한 하나의 조건이면서도, 담화 안에서 시각적으로 은폐된 채 드러나지 않음을 전제로 말하기의 조각을 이룬다.\n\n전시의 구조는 치아의 이름과 기능을 따라 ‘앞니’, ‘송곳니’, ‘어금니’, ‘사랑니’로 구성된다. ‘앞니’엔 비평과 그 주변 담론에 관한 텍스트가, ‘송곳니’엔 대안적 형식의 비평적 언어가, ‘어금니’엔 공동체 중심의 비평이, ‘사랑니’엔 시각적 언어로 비평적 사유를 만드는 디자이너의 텍스트가 배치된다.","en":"Dental Critic is an exhibition held in 2025 at the space Wreath and Towel with support from the Seoul Foundation for Arts and Culture. It focuses on critical writing, especially criticism practised by teams. Teeth are a condition of speech, yet they stay visually hidden inside a conversation and shape what is said on the premise of not being seen.\n\nThe exhibition follows the names and functions of teeth: incisors, canines, molars and wisdom teeth. The incisors hold texts on criticism and its surrounding discourse, the canines critical language in alternative forms, the molars community-centred criticism, and the wisdom teeth texts by designers who build critical thinking through visual language."},"meta":[{"k":"Category","ko":"Exhibition","en":"Exhibition"},{"k":"Duration","ko":"9개월","en":"9 months"},{"k":"Affiliation","ko":"수건과 화환","en":"Wreath and Towel"},{"k":"Curator","ko":"Woosol Lee","en":"Woosol Lee"},{"k":"Graphic Designer","ko":"Haeri Jung","en":"Haeri Jung"},{"k":"Furniture Designer","ko":"Eunji Wang","en":"Eunji Wang"}],"rows":[[{"r":1.781,"items":[{"src":"img/mv0t8rrd7ke508.jpg","x":50,"y":50,"z":1}]}],[{"r":1,"items":[{"src":"img/mv0t8rrdss6x1y.jpg","x":49.574053514139734,"y":23.717147769130225,"z":1},{"src":"img/mv0t8rrdtfctjx.jpg","x":50,"y":50,"z":1},{"src":"img/mv0t8rrdeua15z.jpg","x":50,"y":50,"z":1}]},{"r":1,"items":[{"src":"img/pf-dental-02.jpg","x":47.335152004076086,"y":34.08510954483695,"z":1}]}]],"bg":"#ffffff","fg":"#14161a"},{"title":"Hangang Ship Design","year":"2025","tags":["branding"],"map":[-0.47,0.72],"desc":{"ko":"한강에서 순찰과 홍보의 역할을 수행하는 관공선의 그래픽 작업을 수행하였다. 한강이 시민들에게 경관으로 받아들여지면서 매력적인 이미지의 관공선 디자인이 필요해졌다. 선박 디자인은 교통수단 디자인에 속하면서도 수면과의 색채적 관계를 고민해야 했고, 네덜란드의 경찰선과 미국 해군의 보트를 참조하였다.\n\n홍보선은 해외 귀빈이 서울을 방문할 때 탑승하는 공공선인 만큼 색채를 줄여 차분하고 고급스러운 인상을 주었다. 순찰선은 명료하고 직설적이면서도 너무 딱딱해 보이지 않는 오렌지 컬러를 선택하고, 선박의 형상에 어울리는 사선 형태의 그래픽을 더해 속도감을 주었다.","en":"Graphic design for the public vessels that patrol and promote the Han River. As the river has come to be seen as part of the city's scenery, the vessels needed a more appealing image. Ship design belongs to transport design but also has to consider its colour against the water, and Dutch police boats and US Navy boats served as references.\n\nThe promotional vessel, boarded by overseas guests visiting Seoul, uses a reduced palette for a calm and refined impression. The patrol vessel takes an orange that is clear and direct without looking too rigid, with diagonal graphics that follow the hull and add a sense of speed."},"meta":[{"k":"Category","ko":"Concept Design","en":"Concept Design"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"서울특별시","en":"Seoul Metropolitan City"}],"rows":[[{"r":1.5,"items":[{"src":"img/pf-hangang-05.jpg","x":49.86004604058365,"y":49.99853031493449,"z":1},{"src":"img/pf-hangang-06.jpg","x":50,"y":50,"z":1},{"src":"img/pf-hangang-07.jpg","x":50,"y":50,"z":1},{"src":"img/pf-hangang-08.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tbbjbwpthlm.jpg","x":72.77467197045348,"y":49.14690904214348,"z":1}]}],[{"r":1.33,"items":[{"src":"img/pf-hangang-01.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tbbjbfqd1h2.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tbbjb9odq46.jpg","x":50,"y":50,"z":1}]},{"r":1.33,"items":[{"src":"img/mv0tbbjbgp6l72.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tbbjbsug276.jpg","x":50,"y":50,"z":1}]}]],"bg":"#e6e6e6","fg":"#14161a"},{"title":"Gangdong Central Library","year":"2025","tags":["signage"],"map":[0.74,0.67],"desc":{"ko":"강동중앙도서관은 강동구에 새롭게 조성된 4층 규모의 시민 도서관으로 장서 수가 12만 권에 달한다. 이 규모의 장서를 효율적으로 찾기 위한 사이니지 시스템이 필요했다. 즉흥적으로 길을 찾는 이용객보다 도서의 위치를 알고 목적지로 향하는 이용객을 타겟으로, 서가의 분류보다 숫자와 체계를 강조했다.\n\n사이니지는 서가와 대비되는 블랙 컬러로 적용하고 서가번호 레이아웃을 구분하는 가로 라인을 강조했다. 이 라인 그래픽은 쌓여 있는 책을 은유하는 그래픽으로 확장되어 간판과 홍보물에 적용되었다. 서가분류판의 하부는 자석판과 종이로 제작해 그때그때 교체할 수 있게 했다.","en":"Gangdong Central Library is a new four-storey public library in Gangdong-gu holding around 120,000 volumes, which called for a signage system that makes such a collection easy to search. The system targets visitors who already know where their book is rather than those browsing, so it stresses numbers and structure over shelf categories.\n\nThe signs are black to contrast with the shelves, with horizontal lines that separate the shelf-number layout. The line graphic extends into a metaphor of stacked books and is applied to the signboard and promotional material. The lower part of each shelf panel is made of magnet board and paper so it can be replaced whenever books move."},"meta":[{"k":"Category","ko":"Signage","en":"Signage"},{"k":"Duration","ko":"3개월","en":"3 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"강동문화재단","en":"Gangdong Cultural Foundation"}],"rows":[[{"r":1.5,"items":[{"src":"img/pf-gangdong-04.jpg","x":50,"y":50,"z":1},{"src":"img/pf-gangdong-06.jpg","x":50,"y":50,"z":1},{"src":"img/pf-gangdong-10.jpg","x":50,"y":50,"z":1},{"src":"img/pf-gangdong-07.jpg","x":50,"y":50,"z":1},{"src":"img/pf-gangdong-11.jpg","x":50,"y":50,"z":1},{"src":"img/pf-gangdong-12.jpg","x":50,"y":50,"z":1},{"src":"img/pf-gangdong-13.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tepdc62eehb.jpg","x":49.99980496284657,"y":49.514555595290496,"z":1},{"src":"img/mv0tepdcmivepr.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tepdc9a0cr2.jpg","x":50,"y":50,"z":1}]}],[{"r":1,"items":[{"src":"img/pf-gangdong-01.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tepdcxg6f6o.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tepdc9wn2v4.jpg","x":52.254680444985745,"y":54.68594511198907,"z":1}]},{"r":1,"items":[{"src":"img/pf-gangdong-02.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tepdcssflqe.jpg","x":86.28732659517586,"y":44.57127096081868,"z":1}]}]],"bg":"#bcbbba","fg":"#14161a"},{"title":"Child Healing Center","year":"2025","tags":["signage","branding"],"map":[0.64,0.21],"desc":{"ko":"아동힐링센터는 외상 경험으로 심리적, 신체적 어려움이 있는 아이들이 3개월가량 머무르며 트라우마 기반 치료를 받고 학교로 돌아갈 수 있도록 돕는 시설이다. 서울에서 유일하게 치유와 회복을 위해 조성된 교육시설로서, 2025년 개관을 위한 로고와 사이니지를 디자인하였다.\n\n로고는 아이와 보호자 역할의 어른이 하트 형태로 포옹하는 형상이며, 동그란 조형 어휘로 부드러운 인상을 강조하였다. 밝고 따뜻한 색채로 각 층의 사이니지 색상을 지정하고, 좁은 복도형 공간의 특성에 따라 벽면 부착형과 돌출형 사이니지를 절곡을 통해 하나로 통합하였다.","en":"The Child Healing Center helps children with psychological and physical difficulties after traumatic experiences. They stay for about three months, receive trauma-based treatment and return to school. As the only educational facility in Seoul built for healing and recovery, it needed a logo and signage for its 2025 opening.\n\nThe logo shows a child and a caring adult embracing in the shape of a heart, with rounded forms for a soft impression. Bright, warm colours identify each floor, and because the corridors are narrow, wall-mounted and projecting signs are combined into a single folded sign."},"meta":[{"k":"Category","ko":"Signage, Branding","en":"Signage, Branding"},{"k":"Duration","ko":"6개월","en":"6 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"서울특별시","en":"Seoul Metropolitan City"}],"rows":[[{"r":1,"items":[{"src":"img/pf-childhealing-01.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tg9wbdeqb5g.jpg","x":44.14849226918964,"y":49.85900414760575,"z":1}]},{"r":1,"items":[{"src":"img/pf-childhealing-02.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tg9wbym2du1.jpg","x":36.333277016991445,"y":51.35013014644724,"z":1},{"src":"img/mv0tg9wb0hnas8.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tg9wbwnhebw.jpg","x":50,"y":50,"z":1}]}]],"bg":"#00c184","fg":"#14161a"},{"title":"Carehome Branding","year":"2025","tags":["branding"],"map":[-0.19,0.67],"desc":{"ko":"케어홈은 노인 간병 및 방문형 재활 서비스를 제공하는 스타트업 케어닥이 자체적으로 운영하는 요양 서비스 시설이다. 기존 노인요양시설에 비해 프리미엄 포지션의 서비스를 제공하게 되면서 그에 맞는 브랜드 전략 설정을 위한 디자인을 요청하였다. 하드웨어, 휴먼웨어, 소프트웨어 세 가지를 합하는 모델을 코어 밸류로 설정해 ‘삶이 빛나는 집, 케어홈’이라는 슬로건을 도출하였다.\n\n심볼로고는 홈의 첫 글자 ‘H’를 형상화하면서 활력과 생명력을 의미하는 불꽃의 형상을 결합한다. 딥그린과 샴페인 골드의 컬러가 어우러져 요양시설이 아닌 호텔에서 서비스를 받는 듯한 인상을 준다. 로고타입은 DIN PRO체를 베이스로 X-height를 올리고 날카롭지 않은 세리프를 더했다.","en":"Carehome is a care facility run by Caredoc, a startup providing elderly care and home-visit rehabilitation. As it moved into a premium position compared with existing nursing homes, it asked for a design to set a matching brand strategy. A model combining hardware, humanware and software became the core value, leading to the slogan ‘A home where life shines, Carehome’.\n\nThe symbol shapes the letter H of ‘home’ and combines it with a flame standing for vitality. Deep green with a champagne-gold accent gives the impression of being served in a hotel rather than a care facility. The logotype is based on DIN Pro with a raised x-height and soft serifs."},"meta":[{"k":"Category","ko":"Branding","en":"Branding"},{"k":"Duration","ko":"8개월","en":"8 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"케어닥","en":"Caredoc"}],"rows":[[{"r":1.724,"items":[{"src":"img/mv0tjrzpilabjn.jpg","x":49.191054724212876,"y":36.64364807029984,"z":1},{"src":"img/mv0tjrzp5tf8j8.jpg","x":50.068767805744834,"y":53.11456368073845,"z":1}]}],[{"r":1.438,"items":[{"src":"img/mv0tjrzpxha7le.jpg","x":19.064713974869296,"y":43.401866141564206,"z":1},{"src":"img/mv0tjrzpoxvh04.jpg","x":50,"y":50,"z":1}]},{"r":1.438,"items":[{"src":"img/pf-carehome-02.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tjrzpych528.jpg","x":50,"y":50,"z":1},{"src":"img/mv0tjrzp9xbjmy.jpg","x":49.85931744593631,"y":53.15516737640881,"z":1},{"src":"img/mv0tjrzprlseyx.jpg","x":50,"y":50,"z":1}]}]],"bg":"#f2efe3","fg":"#14161a"},{"title":"Seonjeongneung Heritage Street Branding","year":"2024","tags":["branding","signage"],"map":[-0.2,1.07],"desc":{"ko":"선정릉 역사문화거리 프로젝트는 유네스코 세계문화유산인 선정릉의 가치를 담장 안에 가두지 않고, 우리가 걷는 도심의 가로 위로 확장하는 시도다. 500년의 시간을 품은 유산의 원형을 현대적으로 재해석, 재생산하여 과거와 현재가 공존하고 미래 세대에게 그 가치가 이어지는 지속가능한 도시의 정체성을 구축한다.","en":"The Seonjeongneung Heritage Street project tries to extend the value of Seonjeongneung, a UNESCO World Heritage site, beyond its walls and onto the city streets we walk. It reinterprets and reproduces the original forms of a 500-year-old heritage in a contemporary way, building a sustainable urban identity where past and present coexist and the value is passed on to future generations."},"meta":[{"k":"Category","ko":"Branding, Signage","en":"Branding, Signage"},{"k":"Duration","ko":"8개월","en":"8 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"서울특별시","en":"Seoul Metropolitan City"}],"bg":"#943b41","fg":"#f4ece3","rows":[[{"r":1.757,"items":[{"src":"img/mv0ryacs152ptl.jpg","x":51.15085902210428,"y":44.02727276717294,"z":1.04},{"src":"img/mv0tnkqotiqapo.jpg","x":49.802976804929926,"y":49.64516713069035,"z":1},{"src":"img/mv0tnkqoti0m5s.jpg","x":49.88255321531368,"y":96.61034439810243,"z":1}]}],[{"r":1.524,"items":[{"src":"img/mv0somild4ytyx.jpg","x":86.81052512968117,"y":48.99584654343562,"z":1.42}]},{"r":1.524,"items":[{"src":"img/mv0somilrz3r0u.jpg","x":89.55597143198214,"y":54.25318728736243,"z":1.4},{"src":"img/mv0tpgj2gfgygi.jpg","x":90.08185673122625,"y":48.75158988318309,"z":1.29}]}],[{"r":1.507,"items":[{"src":"img/mv0tmjnfsp0aoc.jpg","x":40.93080237791112,"y":51.271355124080884,"z":1}]},{"r":1.507,"items":[{"src":"img/mv0tmjnflatnlc.jpg","x":50.162729473621674,"y":51.96879308363971,"z":1},{"src":"img/mv0tmjnfhkx4je.jpg","x":0,"y":82.88618738511029,"z":1},{"src":"img/mv0tmjnfdf7030.jpg","x":52.058810970175855,"y":37.483771829044116,"z":1},{"src":"img/mv0tmjnf8bl202.jpg","x":95.57390684410646,"y":31.36803481158088,"z":1},{"src":"img/mv0tmjnfi5273i.jpg","x":51.5678840898289,"y":77.17042451746323,"z":1}]}]]},{"title":"Dongjak Family Center Signage","year":"2024","tags":["signage"],"map":[0.83,-0.26],"desc":{"ko":"동작구에 위치한 가족센터의 건물 리모델링과 함께 진행된 사이니지 개선 프로젝트. 가족센터 로고가 가진 박공지붕 형태에서 모티브를 가져와 사이니지의 형태를 잡고, 층별 컬러를 선정하여 사이니지의 측면에 부분적으로 적용하였다.","en":"A signage improvement project carried out alongside the remodelling of the family center in Dongjak-gu. The shape of the signs takes its motif from the gable roof in the center's logo, and a colour chosen for each floor is applied partially to the sides of the signs."},"meta":[{"k":"Category","ko":"Signage","en":"Signage"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"동작구","en":"Dongjak-gu"}],"rows":[[{"r":1.76,"items":[{"src":"img/mv0ts3yto3b72s.jpg","x":49.65317805010573,"y":52.43731033703512,"z":1}]}],[{"r":0.949,"items":[{"src":"img/pf-dongjak-01.jpg","x":44.48193452204135,"y":45.45866545256194,"z":1}]},{"r":0.949,"items":[{"src":"img/pf-dongjak-04.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ts3ytdjg2om.jpg","x":50.838525576283274,"y":52.313309403153156,"z":1.83}]}]],"bg":"#bee359","fg":"#14161a"},{"title":"Ttukseom Fit Station","year":"2024","tags":["space"],"map":[1,0.3],"desc":{"ko":"서울시 펀스테이션 사업의 일환으로 뚝섬역 공간을 운동시설과 함께 ‘Fit Station’이라는 네이밍으로 개선하는 그래픽 작업을 진행했다. 기둥과 벽면에 방염시트가 적용되었으며 민간위탁운영기관과의 협력으로 진행되었다.","en":"As part of Seoul's Fun Station programme, graphics were designed to improve Ttukseom Station together with its exercise facilities under the name ‘Fit Station’. Flame-retardant sheets were applied to the columns and walls, and the work was carried out with the private operator of the space."},"meta":[{"k":"Category","ko":"Space Graphic","en":"Space Graphic"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"서울특별시","en":"Seoul Metropolitan City"}],"rows":[[{"r":1.5,"items":[{"src":"img/pf-ttukseom-02.jpg","x":50,"y":50,"z":1},{"src":"img/pf-ttukseom-06.jpg","x":50,"y":50,"z":1},{"src":"img/pf-ttukseom-07.jpg","x":50,"y":50,"z":1},{"src":"img/pf-ttukseom-08.jpg","x":50,"y":50,"z":1}]}],[{"r":1,"items":[{"src":"img/pf-ttukseom-01.jpg","x":50,"y":50,"z":1}]},{"r":1,"items":[{"src":"img/pf-ttukseom-03.jpg","x":50,"y":50,"z":1}]}],[{"r":1.33,"items":[{"src":"img/pf-ttukseom-04.jpg","x":50,"y":50,"z":1}]},{"r":1.33,"items":[{"src":"img/pf-ttukseom-05.jpg","x":50,"y":50,"z":1}]}]],"bg":"#25b3b1","fg":"#f4f1ea"},{"title":"Sangsang Campus Signage","year":"2024","tags":["signage"],"map":[0.42,0.53],"desc":{"ko":"경기상상캠퍼스 부지 내의 명확한 정보 전달과 공간 분위기 개선을 목적으로 하는 방향 안내 사이니지 디자인 과업을 수행했다. 과거 서울대학교 농업생명과학대학 부지였던 이곳은 경기문화재단이 복합문화공간으로 운영하고 있으나, 인도와 차도가 제대로 구분되지 않고 주차와 각 공간에 대한 안내 시스템도 정립되지 않아 혼란이 있었다.\n\n기존 로고의 두꺼운 초성 이미지를 바탕으로 화살표와 간판의 디자인 어휘를 정했다. 녹색 풍경과 적당히 대비를 이루는 청록색을 방향 안내에, 분홍색을 주의 안내에 적용하였다. 서체는 ‘한림고딕체’를 사용하고 운전자가 주로 본다는 점을 고려해 일반적인 사이니지보다 크게 적용하였다.","en":"A wayfinding signage project for Gyeonggi Sangsang Campus, aiming at clear information and a better atmosphere across the site. Formerly the grounds of Seoul National University's College of Agriculture and Life Sciences, it is now run as a cultural complex by the Gyeonggi Cultural Foundation, but pavements and roads were poorly separated and guidance to parking and buildings had never been organised.\n\nThe arrows and sign vocabulary build on the thick initial consonants of the existing logo. A teal that contrasts moderately with the green landscape is used for directions, and pink for caution signs. The typeface is Hallym Gothic, set larger than usual because the signs are read mostly by drivers."},"meta":[{"k":"Category","ko":"Signage","en":"Signage"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"경기문화재단","en":"Gyeonggi Cultural Foundation"}],"rows":[[{"r":1.5,"items":[{"src":"img/mv0ttr076s58my.jpg","x":50.32318803600799,"y":51.66162625165053,"z":1},{"src":"img/mv0ttr07ptf3gg.jpg","x":50.600680014244595,"y":63.081776793573944,"z":1},{"src":"img/mv0ttr07cco61p.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ttr07t2sqqo.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ttr07roqzfl.jpg","x":50,"y":50,"z":1}]}],[{"r":1,"items":[{"src":"img/pf-sangsang-01.jpg","x":50.04473687955373,"y":49.999444124260016,"z":1}]},{"r":1,"items":[{"src":"img/pf-sangsang-02.jpg","x":50,"y":50,"z":1}]}]],"bg":"#1c636f","fg":"#f4f1ea"},{"title":"Global Youth Center Signage","year":"2024","tags":["signage","branding"],"map":[0.51,-0.57],"desc":{"ko":"화성시에 위치한 이주청소년을 위한 교육시설 화성시글로벌청소년센터의 브랜딩과 공간 사이니지 디자인 프로젝트. ‘지구별화성’은 별과 같은 아이들이 화성시에 이주해 함께한다는 의미로 지어진 센터의 새로운 이름이다. 아이들이 낯선 환경에서 환영받을 수 있도록 밝은 컬러와 친근한 네이밍으로 심볼, 브랜드 요소, 환경 그래픽을 진행했다.\n\n심볼은 청소년을 의미하는 반짝이는 별과 커뮤니티로서의 ‘지구별’을 상징하는 커다란 원으로 구성되었다. 사이니지는 녹색과 오렌지 컬러를 중심으로 블럭 형상이 조합되는 어휘를 전개하며, 사각형을 컨셉으로 한 휴식공간 ‘스퀘어존’과 일관되도록 각진 디테일로 구성되었다.","en":"Branding and spatial signage for the Hwaseong Global Youth Center, an educational facility for migrant youth in Hwaseong. Its new name, ‘Jigubyeol Hwaseong’, means that children like stars have moved to Hwaseong to be together. Bright colours and a friendly name welcome children in an unfamiliar environment, across the symbol, brand elements and environmental graphics.\n\nThe symbol combines a twinkling star for the young users with a large circle for the community as a ‘planet’. The signage uses green and orange in a vocabulary of combined blocks, with angular details that stay consistent with the ‘Square Zone’, a rest area planned around the square."},"meta":[{"k":"Category","ko":"Signage","en":"Signage"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"화성시","en":"Hwaseong City"}],"rows":[[{"r":1.78,"items":[{"src":"img/mv0ty2mtxqcitt.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ty2mtvv20l1.jpg","x":50,"y":50,"z":1}]}],[{"r":1.33,"items":[{"src":"img/mv0ty2mt3uj9b5.jpg","x":46.94111755139021,"y":32.760126903803666,"z":1}]},{"r":1.33,"items":[{"src":"img/pf-globalyouth-02.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ty2mtq2su4h.jpg","x":0,"y":63.774771642203284,"z":1}]}]],"bg":"#55a58d","fg":"#f4f1ea"},{"title":"Wheelchair Ramp Sticker","year":"2024","tags":["signage"],"map":[0.03,-0.46],"desc":{"ko":"서울시 주도로 상점에 보급되는 휠체어용 경사로가 적용된 상점에 부착되는 스티커의 그래픽 디자인 작업을 진행했다. 기울어진 사선으로 경사로 자체의 시각적 이미지를 강조하는 아이디어를 제안하였고, 피드백을 반영하여 경사로를 사용하는 주체를 나눈 뒤 네 가지의 다른 픽토그램이 공존하는 형상으로 결정되었다.","en":"Graphic design for the sticker attached to shops fitted with wheelchair ramps supplied by the Seoul city government. The first proposal stressed the image of the ramp itself with a slanted line. After feedback, the users of the ramp were divided into groups and the final design shows four different pictograms side by side."},"meta":[{"k":"Category","ko":"Graphic Design","en":"Graphic Design"},{"k":"Duration","ko":"2개월","en":"2 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"서울특별시","en":"Seoul Metropolitan City"}],"rows":[[{"r":1.33,"items":[{"src":"img/pf-wheelchair-01.jpg","x":50,"y":50,"z":1}]}]],"bg":"#d63d7a","fg":"#ffffff"},{"title":"Dongtan Tram Branding","year":"2024","tags":["branding"],"map":[0.2,0.82],"desc":{"ko":"동탄트램 마스터플래닝 디자인 프로젝트 중 시민과의 커뮤니케이션을 담당하는 브랜딩 부분을 진행했다. 동탄은 차량, 정거장, 브랜드 디자인을 하나의 디자인 주체가 통합적으로 관리하도록 과업을 마련하였다. 브랜드의 톤앤매너는 시민친화적이면서도 안전, 친환경, 교통의 역할을 충실히 실현하는 믿음직한 인상으로 구축했고, 슬로건은 ‘ALL NEW WAY’로 설정했다.\n\n로고는 동탄 1, 2 신도시의 형상에서 가져온 반원, 새로운 길과 연결을 의미하는 직선, 자족형 순환도시를 나타내는 원을 그래픽 요소로 사용한다. 초성 ‘ㄷㅌㅌㄹ’을 의미하면서 가로로 길게 뻗은 형태는 나아가는 트램을 상징하며, 캡슐 형태의 라인은 픽토그램, 전조등, 안내판과 노선 체계로 확장된다.","en":"The branding part of the Dongtan Tram master-planning project, in charge of communication with citizens. Dongtan set up the commission so that one design team manages vehicle, stop and brand design together. The tone is citizen-friendly yet trustworthy, standing for safety, sustainability and transport, and the slogan is ‘ALL NEW WAY’.\n\nThe logo uses a half circle taken from the shape of Dongtan new towns 1 and 2, a straight line for a new route and connection, and a circle for a self-sufficient circular city. Its long horizontal form reads as the initial consonants of ‘Dongtan Tram’ in Hangul and as a tram moving forward, and its capsule-shaped line extends into pictograms, headlights, signs and the route system."},"meta":[{"k":"Category","ko":"Branding","en":"Branding"},{"k":"Duration","ko":"6개월","en":"6 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"화성시","en":"Hwaseong City"}],"rows":[[{"r":1.5,"items":[{"src":"img/pf-dongtan-04.jpg","x":50.19867768158784,"y":48.27118744721284,"z":1},{"src":"img/pf-dongtan-07.jpg","x":50,"y":50,"z":1},{"src":"img/pf-dongtan-08.jpg","x":50,"y":50,"z":1},{"src":"img/pf-dongtan-09.jpg","x":50,"y":50,"z":1},{"src":"img/pf-dongtan-11.jpg","x":50,"y":50,"z":1}]}],[{"r":1.344,"items":[{"src":"img/pf-dongtan-02.jpg","x":50,"y":50,"z":1}]},{"r":1.344,"items":[{"src":"img/pf-dongtan-03.jpg","x":51.07287272754278,"y":51.25836755475427,"z":1}]}],[{"r":1.821,"items":[{"src":"img/pf-dongtan-05.jpg","x":26.739501953125,"y":64.58564160894647,"z":1}]},{"r":1.821,"items":[{"src":"img/mv0u0vfqmtvscj.jpg","x":49.064653635931556,"y":22.290904959180363,"z":1},{"src":"img/mv0u0vfqnusabc.jpg","x":49.20473280061787,"y":46.68163048767301,"z":1},{"src":"img/mv0u0vfq735tgk.jpg","x":50.513066629039926,"y":54.16677930363322,"z":1}]}]],"bg":"#a8f5ff","fg":"#14161a"},{"title":"SOMA Museum Merchandise","year":"2023","tags":["branding"],"map":[-0.04,-0.82],"desc":{"ko":"소마미술관에서 자체적으로 판매되는 굿즈의 응용디자인 가이드를 기존 소마미술관의 로고를 바탕으로 설계했다. 미술관의 기존 톤앤매너로부터 디자인 응용 방식을 간결한 방향으로 도출하였다. 로고가 원형을 자르고 조합하여 구성된 것에 착안하여 회전하는 원을 그래픽 모티브로 응용해 패턴을 개발했다.","en":"An application guide for merchandise sold by the SOMA Museum, built on the museum's existing logo. The way of applying the design was kept simple and drawn from the museum's established tone. Because the logo is made by cutting and combining circles, a rotating circle became the graphic motif for the pattern."},"meta":[{"k":"Category","ko":"Merchandise Design","en":"Merchandise Design"},{"k":"Duration","ko":"2개월","en":"2 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"소마미술관","en":"SOMA Museum"}],"rows":[[{"r":1.172,"items":[{"src":"img/pf-soma-03.jpg","x":50.92385657747885,"y":44.72516480194548,"z":1}]}],[{"r":1.026,"items":[{"src":"img/pf-soma-01.jpg","x":50,"y":50,"z":1}]},{"r":1.026,"items":[{"src":"img/pf-soma-02.jpg","x":50,"y":50,"z":1}]}]],"bg":"#d4d4d4","fg":"#14161a"},{"title":"Yeoui Roll Park","year":"2023","tags":["space","branding","signage"],"map":[0.72,1.1],"desc":{"ko":"서울형 액티브 디자인 개발을 위한 공원 조성을 목표로 시작되었다. 액티브 디자인은 도시 환경 개선을 통해 적절한 신체활동을 유도할 수 있다는 개념이다. 여의도 서울색공원에 러닝 트랙, 체조를 위한 고무칩 매트, 바퀴 기구를 탈 수 있는 펌프트랙을 구성했고, 장애인 스포츠 단체 ‘좋은 운동장’의 협조로 휠체어 주행을 직접 진행하며 트랙을 수정했다.\n\n‘여의롤장’은 여의도에 위치한 바퀴 기구를 위한 운동장이라는 의미다. 메인컬러는 장애인과 사회적 약자를 포용하는 의미의 보라색으로, 청록과 오렌지를 포인트로 더해 교각 아래의 어둡고 차가운 분위기를 벗어났다. 8개의 바퀴 종류를 의미하는 ‘8 wheels’ 로고는 바닥 그래픽, 안내판, 팜플렛, 의류에 적용되었다.","en":"The project began with the aim of building a park to develop a Seoul model of active design, the idea that improving the urban environment can encourage physical activity. At Seoul Saekgongwon in Yeouido it combines a running track, rubber-chip mats for exercise and a pump track for wheeled equipment. The track was adjusted through real wheelchair test runs with the help of Good Playground, a group for disabled sports.\n\n‘Yeoui Roll-jang’ means a playground for wheels in Yeouido. The main colour is purple, used internationally to stand for the inclusion of disabled and vulnerable people, with teal and orange accents to lift the dark, cold mood under the bridge. The ‘8 wheels’ logo, for the eight kinds of wheels the park welcomes, is applied to ground graphics, signs, leaflets and clothing."},"meta":[{"k":"Category","ko":"Environmental Design","en":"Environmental Design"},{"k":"Duration","ko":"12개월","en":"12 months"},{"k":"Company","ko":"SOAP","en":"SOAP"},{"k":"Client","ko":"서울특별시","en":"Seoul Metropolitan City"}],"rows":[[{"r":1.33,"items":[{"src":"img/pf-yeoui-08.jpg","x":50,"y":50,"z":1},{"src":"img/pf-yeoui-12.jpg","x":50,"y":50,"z":1},{"src":"img/pf-yeoui-09.jpg","x":50,"y":50,"z":1},{"src":"img/pf-yeoui-13.jpg","x":50,"y":50,"z":1},{"src":"img/pf-yeoui-10.jpg","x":50,"y":50,"z":1},{"src":"img/pf-yeoui-11.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ubqo7hm2j46.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ubqo7v5im8w.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ubqo78iixyz.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ubqo7tc6d4p.jpg","x":49.447322071046756,"y":69.84355163574219,"z":1}]}],[{"r":1.33,"items":[{"src":"img/mv0ubqo74w4h7d.jpg","x":50.65365635396863,"y":59.06415226483586,"z":1},{"src":"img/mv0ubqo7rd8fkg.jpg","x":55.048419676806084,"y":56.59130366161616,"z":1},{"src":"img/mv0ubqo7x0wbcb.jpg","x":12.49053142823194,"y":52.325809363162875,"z":1.44}]},{"r":1.33,"items":[{"src":"img/pf-yeoui-04.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ubqo718gvp0.jpg","x":48.64413765446768,"y":47.45401709970802,"z":1.02},{"src":"img/mv0ubqo7h1mb31.jpg","x":50,"y":50,"z":1}]}],[{"r":1.483,"items":[{"src":"img/pf-yeoui-05.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ubqo724jco2.jpg","x":50,"y":50,"z":1}]},{"r":1.483,"items":[{"src":"img/pf-yeoui-07.jpg","x":50,"y":50,"z":1},{"src":"img/mv0ubqo7kg2ajv.jpg","x":45.749957298597906,"y":49.618333011525664,"z":1}]}]],"bg":"#b06ce9","fg":"#f4f1ea"},{"title":"Gokmuldogam","year":"2022","tags":["branding"],"map":[-0.44,0.41],"desc":{"ko":"몸에 좋은 재료를 직접 선별하고 연구, 제조하여 소비자에게 선보이는 건강 전문 브랜드 곡물도감의 브랜딩과 마케팅을 담당했다. 건강 브랜드의 깔끔하고 단아한 느낌을 유지하면서 모바일 환경에서 효율적인 이미지 요소를 만드는 것을 목표로 했다.\n\n로고는 ‘동의보감’을 연상시키는 브랜드 네임과 연결지어 낙인의 형태로 구성했고, 훈민정음 해례본의 판본체를 바탕으로 한 서체를 사용했다. 패키지엔 재료의 사진보다 그림으로 표현한 이미지를 배경으로 넣어 분위기 전달에 강조점을 두었다.","en":"Branding and marketing for Gokmuldogam, a health brand that selects, researches and manufactures wholesome ingredients and sells them directly to consumers. The goal was to keep the clean, modest feel of a health brand while building image elements that work efficiently on mobile.\n\nThe logo takes the form of a seal, connected to a brand name that recalls the classic medical text Donguibogam, and uses a typeface based on the woodblock letters of the Hunminjeongeum Haerye. The packaging uses illustrated ingredients rather than photographs as a background, putting the emphasis on mood."},"meta":[{"k":"Category","ko":"Branding, Package Design","en":"Branding, Package Design"},{"k":"Duration","ko":"6개월","en":"6 months"},{"k":"Company","ko":"Pointnine","en":"Pointnine"}],"rows":[[{"r":1.33,"items":[{"src":"img/pf-gokmul-02.jpg","x":50,"y":50,"z":1},{"src":"img/pf-gokmul-06.jpg","x":50,"y":50,"z":1},{"src":"img/pf-gokmul-07.jpg","x":50,"y":50,"z":1}]}],[{"r":1.33,"items":[{"src":"img/pf-gokmul-01.jpg","x":50,"y":50,"z":1}]},{"r":1.33,"items":[{"src":"img/pf-gokmul-03.jpg","x":50,"y":50,"z":1}]}],[{"r":1.33,"items":[{"src":"img/pf-gokmul-04.jpg","x":50,"y":50,"z":1}]},{"r":1.33,"items":[{"src":"img/pf-gokmul-05.jpg","x":50,"y":50,"z":1}]}]],"bg":"#c09164","fg":"#f4f1ea"},{"title":"ONTZ","year":"2022","tags":["branding"],"map":[-0.88,0.24],"desc":{"ko":"온츠는 남녀가 편안하게 착용할 수 있는 유니섹스 브랜드로 2019년 런칭하였다. ‘over normal to zenith’라는 슬로건에 맞게 담백하고 기본적인 퀄리티를 추구하는 브랜드의 이미지를 표현하는 브랜드 아이덴티티를 정립했다. 심볼로고는 O와 n이 겹쳐진 모노그램으로 웹과 의류 등 다양한 매체에 적용된다.","en":"ONTZ is a unisex clothing brand launched in 2019. Following its slogan ‘over normal to zenith’, the identity expresses a brand that pursues plain, basic quality. The symbol is a monogram of an overlapping O and n, applied across the web, garments and other media."},"meta":[{"k":"Category","ko":"Branding","en":"Branding"},{"k":"Duration","ko":"12개월","en":"12 months"},{"k":"Company","ko":"Pointnine","en":"Pointnine"},{"k":"Visual Director","ko":"Jaewook Kim","en":"Jaewook Kim"},{"k":"Designer","ko":"Jaewook Kim","en":"Jaewook Kim"}],"rows":[[{"r":1.78,"items":[{"src":"img/mv0udyifdmelhx.jpg","x":50,"y":50,"z":1}]}],[{"r":1,"items":[{"src":"img/mv0udyif7izwey.jpg","x":50.974566673597906,"y":3.552710239424904,"z":1.45}]},{"r":1,"items":[{"src":"img/pf-ontz-02.jpg","x":50,"y":50,"z":1},{"src":"img/mv0udyif3vfl1t.jpg","x":0,"y":65.36329146120485,"z":1.16},{"src":"img/mv0udyif62gakp.jpg","x":80.57726725879277,"y":48.340481950302994,"z":1}]}]],"bg":"#262a3b","fg":"#f4f1ea"},{"title":"Infinity or Nothing","year":"2022","tags":["art","exhibition"],"map":[0.06,0.11],"desc":{"ko":"현재는 갑작스럽게 우리에게 도래하지 않는다. 나의 시선과 타자와의 만남은 스쳐 지나갔던 수많은 만남과 오랜 길들을 훑었던 시선들의 반복과 변형으로 이뤄진 복합적인 산출물이다.\n\n세면대에서 떨어지는 물소리, 아침의 새소리, 아이들의 장난처럼 하릴없어 보이는 것들은 목적을 향해 소리 없이 사라지는 듯 보인다. 이번 전시는 ‘사이’와 ‘틈’에 존재했던, 그렇게 사라진 줄 알았던 일상의 접합점들을 모양과 형태 그 자체로 재발굴하여 익숙한 과거 속의 낯선 현재를 보여준다.","en":"The present does not arrive suddenly. My gaze and each encounter with another are compound products of the countless encounters that have passed and of gazes repeated and varied along long roads.\n\nThings that seem idle, such as water dripping in a sink, birdsong in the morning or children's pranks, appear to vanish silently into the purposes they serve. This exhibition digs up those joints of everyday life that lived in the gaps and seemed lost, as shapes and forms in themselves, showing an unfamiliar present inside a familiar past."},"meta":[{"k":"Category","ko":"Art Project","en":"Art Project"},{"k":"Duration","ko":"3개월","en":"3 months"},{"k":"Artist","ko":"Youngmi Lee","en":"Youngmi Lee"},{"k":"Space","ko":"Junleung Base","en":"Junleung Base"}],"rows":[[{"r":1.5,"items":[{"src":"img/pf-infinity-02.jpg","x":50,"y":50,"z":1}]}],[{"r":1,"items":[{"src":"img/pf-infinity-01.jpg","x":50,"y":50,"z":1}]},{"r":1,"items":[{"src":"img/pf-infinity-03.jpg","x":50,"y":50,"z":1}]}]],"bg":"#5c94c1","fg":"#f4f1ea"},{"title":"Museum Geivert","year":"2021","tags":["editorial"],"map":[-0.57,-0.72],"desc":{"ko":"미술관이라는 공간 경험에 대한 대안적인 방식을 서사적으로 풀어나가는 작은 소책자다. 미술관의 특수한 경험은 어떠한 방식으로 발생하는가, 관계성 외에 아무것도 없다면 어떤 경험이 남는가에 관한 질문에서 시작된 산발적인 작은 문단들로 구성되었다.\n\n종이는 여러 장을 두텁게 겹친 배접지를 사용하고 흰색 실로 제본하였다. 전시공간에서 관람객이 볼 수 있도록 배치되어 연약하지만 쉽게 손상되지 않는 재료로 마감되었다.","en":"A small booklet that narrates alternative ways of experiencing the museum as a space. It is made of scattered short paragraphs that start from questions: how does the particular experience of a museum arise, and what remains if there is nothing but relations?\n\nIt uses thick paper laminated from several sheets and is bound with white thread. Made to be handled by visitors in an exhibition space, it is finished in materials that are fragile yet not easily damaged."},"meta":[{"k":"Category","ko":"Book Design, Text","en":"Book Design, Text"},{"k":"Duration","ko":"3개월","en":"3 months"},{"k":"Credit","ko":"단독 프로젝트","en":"Solo project"}],"rows":[[{"r":1.5,"items":[{"src":"img/pf-geivert-02.jpg","x":50,"y":50,"z":1}]}]],"bg":"#212123","fg":"#f4f1ea"},{"title":"Yongsan 2021","year":"2021","tags":["art"],"map":[-0.85,0.6],"desc":{"ko":"용산은 복잡한 시간의 레이어가 교차하는 장소다. 현재 높은 아파트로 정비된 용산 4구역은 재개발 당시 ‘용산 참사’가 일어났던 장소이기도 하다. 도시개발은 과거의 기억을 깔끔하게 삭제하는 ‘포맷’의 행위이기도 하다.\n\n참사가 일어난 2009년에 출시된 핸드폰을 10년 넘는 시간 만에 재충전해 거리로 나가 용산 4구역을 촬영했다. 사진 매체는 그것이 제작된 시기의 분위기를 담는다. 구시대적 매체가 시간의 온기를 간직하고 오늘을 다른 눈으로 포착하는 운동성이 개발의 말끔한 소거법을 의심한다.","en":"Yongsan is a place where complex layers of time cross. Yongsan District 4, now rebuilt as tall apartment blocks, is also where the ‘Yongsan disaster’ took place during redevelopment. Urban development is also an act of ‘formatting’ that cleanly deletes the memory of the past.\n\nA mobile phone released in 2009, the year of the disaster, was recharged after more than ten years and taken out to photograph District 4. A photographic medium carries the mood of the time it was made. An outdated medium that keeps the warmth of time and catches today through a different eye casts doubt on development's tidy erasure."},"meta":[{"k":"Category","ko":"Art Project","en":"Art Project"},{"k":"Duration","ko":"1개월","en":"1 month"},{"k":"Credit","ko":"단독 프로젝트","en":"Solo project"}],"rows":[[{"r":1.5,"items":[{"src":"img/pf-yongsan-02.jpg","x":50,"y":50,"z":1},{"src":"img/pf-yongsan-06.jpg","x":50,"y":50,"z":1},{"src":"img/pf-yongsan-07.jpg","x":50,"y":50,"z":1}]}],[{"r":1,"items":[{"src":"img/pf-yongsan-01.jpg","x":50,"y":50,"z":1}]},{"r":1,"items":[{"src":"img/pf-yongsan-03.jpg","x":50,"y":50,"z":1}]}]],"bg":"#0d0d0d","fg":"#f4f1ea"},{"title":"Midam","year":"2021","tags":["editorial"],"map":[-0.56,-0.33],"desc":{"ko":"미담은 한살림 소속 모심과살림연구소를 중심으로 모인 청년들이 만드는 비정기 무크지로, ‘미래를 바꾸는 담론’이라는 의미를 지닌다. 1호는 ‘사회에 균열을 내는 사람들’이라는 부제에 걸맞게 얼어붙은 빙판을 깨트리는 듯한 일러스트로 디자인되었다. 표지는 상단과 하단이 강한 대비로 구분되며, 붉은 바위와 흰 바닥의 균열이 대비되면서 함께 ‘목소리’를 표현한다.\n\n2호는 가볍고 경쾌하게 주변 사람들의 일상을 들어보는 취지로 기획되어, 색채를 더 다양하게 시도하고 균열 뒤 피어나는 작은 새싹으로 이전 호와의 연속성을 보여주었다.","en":"Midam is an occasional mook made by young people gathered around the Mosim and Salim Institute of Hansalim; the name means ‘discourse that changes the future’. Issue 1, subtitled ‘people who crack society’, uses an illustration that looks like ice being broken. The cover splits into strongly contrasting upper and lower halves, where a red rock and a cracked white ground stand against each other and together express a ‘voice’.\n\nIssue 2 was planned as a lighter look at the everyday lives of people around us, with a wider range of colour and a small sprout growing after the crack to connect it to the first issue."},"meta":[{"k":"Category","ko":"Book Design, Editorial","en":"Book Design, Editorial"},{"k":"Duration","ko":"5개월","en":"5 months"},{"k":"Client","ko":"한살림","en":"Hansalim"}],"rows":[[{"r":1.33,"items":[{"src":"img/pf-midam-02.jpg","x":50,"y":50,"z":1},{"src":"img/pf-midam-07.jpg","x":50,"y":50,"z":1},{"src":"img/pf-midam-08.jpg","x":50.022165398848685,"y":50.05970001220703,"z":1},{"src":"img/mv0uhqvomw9zk1.jpg","x":50,"y":50,"z":1.11},{"src":"img/mv0uhqvovdzw9j.jpg","x":50,"y":50,"z":1.03}]}],[{"r":1.663,"items":[{"src":"img/mv0uhqvoc1z8uf.jpg","x":65.52836487048481,"y":57.58021983438486,"z":1.68}]},{"r":1.663,"items":[{"src":"img/mv0uhqvoy5105k.jpg","x":50,"y":50,"z":1}]}]],"bg":"#2e312c","fg":"#f4f1ea"},{"title":"Pointnine","year":"2020","tags":["branding"],"map":[-0.55,0.07],"desc":{"ko":"포인트나인은 2020년 시작한 온라인 커머스 전문 인큐베이팅 스타트업으로, “0.1%의 창의적 인간과 그것을 알아보고 협력한 0.9%의 안목 있는 인간”이 문명사회를 건설했다는 제레미 리프킨의 문장에서 0.9%의 협력자를 지향하는 브랜드다.\n\n숫자 ‘9’를 강조하여 9 앞의 온점과 9 내부의 비어 있는 원의 관계로 생산업체와 인큐베이팅 업체의 관계를 표현하였다. 로고타입엔 ‘Red Hat Display’ 서체를 사용했고, 협력사에게 신뢰를 줄 수 있는 정적이고 차분한 톤으로 설정되었다.","en":"Pointnine is an incubating startup for online commerce founded in 2020. The brand aims to be the 0.9% collaborator in Jeremy Rifkin's line that civilisation was built by “the 0.1% of creative people and the 0.9% with the eye to recognise and work with them”.\n\nThe design stresses the number 9, expressing the relation between producers and the incubator through the dot before the 9 and the empty circle inside it. The logotype uses Red Hat Display, in a calm, static tone meant to earn the trust of partners."},"meta":[{"k":"Category","ko":"Branding","en":"Branding"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Company","ko":"Pointnine","en":"Pointnine"},{"k":"Client","ko":"Pointnine","en":"Pointnine"}],"rows":[[{"r":1.78,"items":[{"src":"img/pf-pointnine-01.jpg","x":49.976389031661185,"y":50.040571027774874,"z":1}]}]],"bg":"#ffffff","fg":"#f4f1ea"},{"title":"Saeroi","year":"2020","tags":["art","poster"],"map":[-0.85,-0.49],"desc":{"ko":"2020년 아트토크 시리즈 전시를 위해 진행된 작업이다. 윤율리 큐레이터가 멘토로 참여해, 코로나19의 장기화로 언택트 전시가 새로운 표준이 되었을 때 미래의 전시의 모습에 관해 질문을 던졌다.\n\n포스터는 손으로 새를 형상화한 이미지가 여럿 배치되어 함께 날아가는 모습을 연상시키며, 키넥트의 3D 입체 센서로 촬영되었다. 촉각의 도구인 손이 이미지를 형상하며 또 다른 운동으로 함께하는 풍경을 상상한다.","en":"A work made for the 2020 Art Talk exhibition series. With curator Yoon Yuli as mentor, it asked what exhibitions might look like once contact-free shows became the new standard during the long COVID-19 pandemic.\n\nThe poster arranges several images of hands shaped as birds so that they seem to fly together, captured with the 3D depth sensor of a Kinect. It imagines a scene in which the hand, the tool of touch, forms images and joins in another kind of movement."},"meta":[{"k":"Category","ko":"Art Project","en":"Art Project"},{"k":"Duration","ko":"1개월","en":"1 month"},{"k":"Credit","ko":"단독 프로젝트","en":"Solo project"}],"rows":[[{"r":1.082,"items":[{"src":"img/pf-saeroi-01.jpg","x":50,"y":50,"z":0.86,"fit":"contain"}]}]],"bg":"#010101","fg":"#f4f1ea"},{"title":"Geulim","year":"2019","tags":["editorial"],"map":[-0.92,-0.77],"desc":{"ko":"‘그을림’은 서울공항에서 함께 군 복무를 하던 여덟 명이 2019년 한 해 동안 16권의 책을 읽고 이야기를 나누며 작성한 텍스트를 엮은 결과물이다. 모임 이름은 ‘그을리다’라는 뜻과 글을 읽는 모임이라는 두 가지 의미를 병합해 만들었다.\n\n앞표지와 책등을 구성하는 로고타입은 원, 정사각형, 삼각형, x자 등 최소한의 도형으로 구성해 글자와 도형 사이의 애매한 읽힘을 의도했다. 기하학적인 디자인이 장르를 규정짓지 않는 중립성을 표현하면서도 실험적인 공동체의 성격을 드러낸다.","en":"‘Geulim’ collects texts written by eight people who served together at Seoul Air Base and spent 2019 reading and discussing sixteen books. The name merges two meanings in Korean: to be scorched, and a gathering that reads writing.\n\nThe logotype on the cover and spine is built from minimal shapes, a circle, square, triangle and x, aiming for an ambiguous reading between letter and shape. The geometric design expresses a neutrality that does not fix a genre while showing the experimental character of the group."},"meta":[{"k":"Category","ko":"Book Design, Editorial","en":"Book Design, Editorial"},{"k":"Duration","ko":"12개월","en":"12 months"},{"k":"Credit","ko":"단독 프로젝트","en":"Solo project"}],"rows":[[{"r":1.716,"items":[{"src":"img/pf-geulim-02.jpg","x":50,"y":50,"z":1},{"src":"img/mv0umgt2j1ye22.jpg","x":50,"y":50,"z":1},{"src":"img/mv0umgt2x6cstb.jpg","x":50,"y":50,"z":1}]}]],"bg":"#ffffff","fg":"#14161a"},{"title":"Pareidolia","year":"2017","tags":["editorial"],"map":[-0.35,-0.8],"desc":{"ko":"사물에서 사람의 얼굴을 인지하는 현상인 파레이돌리아(Pareidolia)를 주제로 제작된 사진집이다. 500여 개의 사진으로 구성되었으며, 감정이라는 큰 카테고리 안에 색상, 형태, 사물의 종류에 따라 다르게 배치되어 있다.","en":"A photo book on pareidolia, the phenomenon of seeing human faces in objects. It contains around 500 photographs, arranged within the broad category of emotion by colour, shape and type of object."},"meta":[{"k":"Category","ko":"Book Design, Editorial","en":"Book Design, Editorial"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Credit","ko":"단독 프로젝트","en":"Solo project"}],"rows":[[{"r":1.359,"items":[{"src":"img/pf-pareidolia-01.jpg","x":50,"y":50,"z":1},{"src":"img/mv0umgt2afoktw.jpg","x":50,"y":50,"z":1}]}],[{"r":1.428,"items":[{"src":"img/pf-pareidolia-02.jpg","x":50,"y":50,"z":1}]},{"r":1.428,"items":[{"src":"img/pf-pareidolia-03.jpg","x":50,"y":50,"z":1}]}]],"bg":"#000000","fg":"#f4f1ea"},{"title":"Fenêtre","year":"2017","tags":["editorial","poster"],"map":[-0.31,-0.4],"desc":{"ko":"창문은 사람과 사람 사이를 연결해주는 그래픽 디자인의 기능에 대한 메타포다. ‘Fenêtre’는 2년 동안 모은 건물의 창문 사진을 바탕으로 제작된 패턴 모음집으로, 이미지를 변형해 원근을 없애고 무한히 확장되는 패턴을 만들었다.\n\n포스터는 창문의 패턴과 프랑스어 단어 ‘Fenêtre’의 반복을 포개어, 해가 진 밤 높은 빌딩의 밝은 창문과 꺼진 창문이 교차하며 만드는 그래픽적 이미지를 형상화했다.","en":"The window is a metaphor for graphic design's function of connecting people. ‘Fenêtre’ is a collection of patterns made from photographs of building windows gathered over two years, with the images altered to remove perspective and extend endlessly.\n\nThe poster overlays the window pattern with the repeated French word ‘Fenêtre’, picturing the graphic image made by lit and dark windows crossing on tall buildings after sunset."},"meta":[{"k":"Category","ko":"Book Design, Editorial","en":"Book Design, Editorial"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Credit","ko":"단독 프로젝트","en":"Solo project"}],"rows":[[{"r":1.5,"items":[{"src":"img/pf-fenetre-02.jpg","x":50,"y":50,"z":1},{"src":"img/pf-fenetre-06.jpg","x":50,"y":50,"z":1}]}],[{"r":1.326,"items":[{"src":"img/pf-fenetre-01.jpg","x":50,"y":50,"z":1}]},{"r":1.326,"items":[{"src":"img/pf-fenetre-03.jpg","x":50,"y":50,"z":1},{"src":"img/mv0umgt2jf5ygw.jpg","x":50,"y":50,"z":1},{"src":"img/mv0umgt2w3phko.jpg","x":50,"y":50,"z":1},{"src":"img/mv0umgt2rjssft.jpg","x":50,"y":50,"z":1}]}]],"bg":"#232223","fg":"#f4f1ea"},{"title":"Abécédaire","year":"2017","tags":["editorial"],"map":[-0.6,-0.99],"desc":{"ko":"들뢰즈는 다큐멘터리 프로그램 ‘Abécédaire(질 들뢰즈의 A to Z)’에서 알파벳 순서에 맞춘 키워드로 자신의 철학 세계를 열어 보인다. 본 프로젝트는 우연적인 배열을 통해 도출될 수 있는 디자인의 요소를 나열해보는 의도로 구성되었다.\n\n백과사전처럼 두꺼운 책의 측면에 색인을 표기하는 ‘썸 인덱스(Thumb Index)’로 구성된 이 책은 알파벳 순서로 그래픽 디자인에 관한 키워드를 담고 있다. 순서와 배치를 통한 권위를 포기하고, 독자의 읽기 행위에 의해 분해된 자잘한 텍스트 조각의 모음이 된다.","en":"In the documentary ‘Abécédaire (Gilles Deleuze from A to Z)’, Deleuze opens up his philosophy through keywords in alphabetical order. This project was built to lay out the design elements that can emerge from such an arbitrary arrangement.\n\nMade with a thumb index, the kind cut into the edge of thick books such as encyclopaedias, the book holds keywords on graphic design in alphabetical order. It gives up the authority of sequence and placement and becomes a collection of small pieces of text taken apart by the reader's act of reading."},"meta":[{"k":"Category","ko":"Book Design, Editorial","en":"Book Design, Editorial"},{"k":"Duration","ko":"2개월","en":"2 months"},{"k":"Credit","ko":"단독 프로젝트","en":"Solo project"}],"rows":[[{"r":1.33,"items":[{"src":"img/pf-abecedaire-02.jpg","x":50,"y":50,"z":1},{"src":"img/mv0umgt23fsgvh.jpg","x":50,"y":50,"z":1}]}]],"bg":"#d0d0d0","fg":"#14161a"},{"title":"Transformation","year":"2017","tags":["art","editorial"],"map":[-0.95,-0.15],"desc":{"ko":"‘변환’은 프랑스 대학 졸업전시에서 발표한 세 개의 프로젝트 중 가장 중심적인 프로젝트다. “무의미한 단어들로 쓰인 글이 무의미함 그 자체를 전달하는 것을 목적으로 한다면 이는 또 하나의 의미를 가질 수 있을까?”라는 질문에서 시작했다. 프란츠 카프카의 소설 『변신』은 기계번역기에 의해 ‘변환(transformation)’이라는 단어로 오독되며, 본문은 총 5개의 언어로 기계번역된다.\n\n표지는 벌레 이미지 여럿을 포개고 노이즈 역할의 필터로 왜곡해 형상을 추상화했다. 각 언어의 판본은 문장구조가 뒤틀리고 부적절한 단어가 선정되어 낯설게 읽힌다. 완벽함으로 재설정되는 시대에 사라지지 않은 기계의 어설픔이 만들어낼 수 있는 독특한 언어를 담고자 했다.","en":"‘Transformation’ is the central one of three projects shown at the graduation exhibition in France. It began with a question: if a text written in meaningless words aims to convey meaninglessness itself, can it take on another meaning? Franz Kafka's novel The Metamorphosis is misread by a machine translator as ‘transformation’, and the text is machine-translated into five languages.\n\nThe cover overlays several images of insects and distorts them with a noise-like filter until the form becomes abstract. Each language edition reads strangely, with twisted sentence structures and ill-chosen words. The project tries to hold the peculiar language that a machine's clumsiness can still produce in an age being reset towards perfection."},"meta":[{"k":"Category","ko":"Art Project","en":"Art Project"},{"k":"Duration","ko":"4개월","en":"4 months"},{"k":"Credit","ko":"단독 프로젝트","en":"Solo project"}],"rows":[[{"r":1.856,"items":[{"src":"img/pf-transformation-05.jpg","x":51.18674567856375,"y":87.40360343070088,"z":3,"fit":"contain","bg":"#eaecf9"},{"src":"img/mv0umgt2rz2ccd.jpg","x":50,"y":50,"z":1}]}],[{"r":1.141,"items":[{"src":"img/pf-transformation-06.jpg","x":50.00054363297065,"y":51.42078003211605,"z":1.02,"fit":"contain","bg":"#c7c7c7"}]},{"r":1.141,"items":[{"src":"img/pf-transformation-07.jpg","x":50,"y":50,"z":1.06,"fit":"contain"}]}]],"bg":"#c5c5c5","fg":"#14161a"},{"title":"Abduction Cow Milk","year":"2013","tags":["art"],"map":[-1.02,0.92],"desc":{"ko":"경기예술고등학교 재학 중 방과후 프로그램으로 제작된 스톱모션 애니메이션으로, 젖소가 외계인에게 납치되는 사건을 다룬다. 3인 공동감독 구성으로 제작되었으며 오타와 국제 애니메이션 페스티벌에서 학생 부문 대상을 수상했다.\n\n디자이너를 본격적으로 꿈꾸기 이전에 유일하게 작품 형태로 완성된 작업이다.","en":"A stop-motion animation made in an after-school programme at Gyeonggi Arts High School, about a dairy cow abducted by aliens. It was made by three co-directors and won the grand prize in the student category at the Ottawa International Animation Festival.\n\nIt is the only work completed as a finished piece before seriously dreaming of becoming a designer."},"meta":[{"k":"Category","ko":"Animation","en":"Animation"},{"k":"Duration","ko":"12개월","en":"12 months"},{"k":"Affiliation","ko":"경기예술고등학교","en":"Gyeonggi Arts High School"},{"k":"Director","ko":"Woosol Lee, Hyunji Yoon, Shinhye Kim","en":"Woosol Lee, Hyunji Yoon, Shinhye Kim"}],"rows":[[{"r":1.33,"items":[{"src":"img/pf-abduction-01.jpg","x":50,"y":50,"z":1}]}]],"bg":"#aafcfd","fg":"#14161a"}],"info":[[{"l":0,"h":"Woosol Lee:","lines":[{"ko":"그래픽 디자이너","en":"Graphic Designer"}]},{"l":0,"h":"About:","lines":[{"ko":"애니메이션부터 북디자인, 상업적 브랜딩, 환경디자인까지 프로젝트의 성격은 다양하지만 그 중심엔 언제나 그래픽 디자인이 자리잡고 있다. 이곳은 2015년부터 2025년까지의 프로젝트를 결과물만이 아니라 과정의 이야기와 함께 기록한 아카이브다.","en":"The projects range from animation and book design to commercial branding and environmental design, but graphic design is always at the centre. This is an archive of projects from 2015 to 2025, recorded with the story of the process and not only the results."}]},{"l":0,"h":"Contact:","lines":[]},{"l":1,"h":"Inquiry","lines":[],"email":"hello@example.com"}],[{"l":0,"h":"Education:","lines":[]},{"l":1,"h":"2017","lines":[{"ko":"프랑스 브장송예술학교(Institut Supérieur des Beaux-Arts de Besançon) BAC+3(DNA) 졸업","en":"Institut Supérieur des Beaux-Arts de Besançon, France, BAC+3 (DNA)"}]},{"l":0,"h":"Experience:","lines":[]},{"l":1,"h":"2023–","lines":[{"ko":"SOAP","en":"SOAP"},{"ko":"Graphic Designer","en":"Graphic Designer"}]},{"l":1,"h":"2020–2023","lines":[{"ko":"POINTNINE CREW","en":"POINTNINE CREW"},{"ko":"Graphic Designer","en":"Graphic Designer"}]}],[{"l":0,"h":"Interview & Talk:","lines":[]},{"l":1,"h":"2025","lines":[{"ko":"월간미술 4월 제438호 인터뷰","en":"Interview, Wolganmisool (Monthly Art), April, no. 438"},{"ko":"인미공 종료전시 《그런 공간》 라운드 테이블","en":"Round table, Insa Art Space closing exhibition ‘Such a Space’"}]},{"l":1,"h":"2020","lines":[{"ko":"아르코미술관 ART TALK","en":"ART TALK, ARKO Art Center"}]},{"l":0,"h":"Text:","lines":[]},{"l":1,"h":"2025","lines":[{"ko":"장서영 아티스트북 『아틀라스』 초견글","en":"First-reading text for ‘Atlas’, artist book by Seoyoung Chang"}]},{"l":1,"h":"2024","lines":[{"ko":"이윤재 개인전 《Hovering Duration》 도록 텍스트","en":"Catalogue text for ‘Hovering Duration’, solo exhibition by Yunjae Lee"},{"ko":"김보은 퍼포먼스 《꼬리를 삼키는 연습》 텍스트","en":"Text for ‘Practice of Swallowing the Tail’, performance by Boeun Kim"}]}]]}</script>
+<script id="app">
+/* 내용(프로젝트, Info)은 코드가 아니라 데이터에 있음:
+   - 이 페이지 안의 #site-data  (기본값, 또는 "통째 저장"된 최신 내용)
+   - 옆에 저장된 data/site.json + img/…  (편집 모드의 "파일 저장")
+   둘 중 rev가 큰 쪽을 씀. 페이지를 다시 게시할 때 #site-data의 저장된 내용을 덮어쓰지 말 것. */
+const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
+$("#app").before($("#shell").content.cloneNode(true));
+
+let SITE = JSON.parse($("#site-data").textContent);
+let lang = "ko", editing = false, dirty = false, snapshot = "", booted = false;
+try { if (localStorage.getItem("lang") === "en") lang = "en"; } catch {}
+const pending = new Map();   /* 이번에 새로 넣은 이미지: 화면용 주소 → 파일 */
+const alias = new Map();     /* 저장된 경로 → 이번 화면에서 쓸 주소 */
+const show = s => alias.get(s) || s;
+const T = v => typeof v === "string" ? v : (v && (v[lang] || v.ko || v.en)) || "";
+
+const UI = {
+  empty: {ko: "이 태그에 해당하는 프로젝트가 아직 없습니다.", en: "No projects under this tag yet."},
+  top: {ko: "맨 위로 ↑", en: "Back to top ↑"},
+  copy: {ko: "주소 복사", en: "Copy address"}, copied: {ko: "복사됨", en: "Copied"}, selected: {ko: "선택됨", en: "Selected"},
+  image: {ko: "이미지", en: "Image"}, zoom: {ko: "확대", en: "Zoom"}, delItem: {ko: "이 장 삭제", en: "Delete this"}, delSlot: {ko: "칸 삭제", en: "Delete slot"},
+  slot: {ko: "칸", en: "Slot"}, row: {ko: "이미지 행", en: "Image row"}, delRow: {ko: "행 삭제", en: "Delete row"}, field: {ko: "항목", en: "Field"},
+  bg: {ko: "배경", en: "Back"}, fg: {ko: "글자", en: "Text"}, delProject: {ko: "프로젝트 삭제", en: "Delete project"}, sure: {ko: "한 번 더 누르면 삭제", en: "Click again to delete"},
+  addProject: {ko: "＋ 프로젝트", en: "＋ Project"}, save: {ko: "저장", en: "Save"}, exit: {ko: "닫기", en: "Close"},
+  line: {ko: "줄", en: "Line"}, block: {ko: "블록", en: "Block"},
+  stEdit: {ko: "편집 중 · 글자는 바로 고치고, 사진은 끌어서 위치를 맞춥니다", en: "Editing · type to change text, drag photos to reposition"},
+  stDirty: {ko: "저장하지 않은 변경이 있습니다", en: "Unsaved changes"},
+  stSaving: {ko: "저장 중…", en: "Saving…"}, stSaved: {ko: "저장했습니다", en: "Saved"},
+  stNoStore: {ko: "이 화면에서는 저장할 수 없습니다", en: "Saving is not available in this view"},
+  stReadOnly: {ko: "이 계정은 보기 전용이라 저장할 수 없습니다", en: "This account is view-only and cannot save"},
+  stConflict: {ko: "다른 곳에서 먼저 저장되어 새 내용을 불러옵니다", en: "Someone saved first; loading their version"},
+  stLarge: {ko: "용량이 너무 큽니다. 이미지나 GIF를 줄여 주세요", en: "Too large. Reduce images or GIFs"},
+  stSlow: {ko: "저장이 너무 잦습니다. 잠시 뒤 다시 눌러 주세요", en: "Saving too often. Try again shortly"},
+  stFail: {ko: "저장하지 못했습니다. 다시 눌러 주세요", en: "Could not save. Try again"},
+  stDiscard: {ko: "저장하지 않은 변경이 있습니다. 한 번 더 누르면 버리고 닫습니다", en: "Unsaved changes. Click again to discard and close"},
+  stGif: {ko: "15MB가 넘는 파일은 넣을 수 없습니다", en: "Files over 15MB cannot be added"},
+  pick: {ko: "사진에서", en: "From photo"}, stPick: {ko: "사진 위를 눌러 색을 찍으세요 (Esc로 취소)", en: "Click a photo to pick a colour (Esc to cancel)"},
+  fitIn: {ko: "작게 넣기", en: "Fit inside"}, fitFill: {ko: "꽉 채우기", en: "Fill frame"}, margin: {ko: "여백색", en: "Margin"},
+  resizeLast: {ko: "끌어서 이 행의 높이 조정", en: "Drag to change this row's height"},
+  resize: {ko: "끌어서 위아래 사진의 높이 비율 조정", en: "Drag to rebalance the rows above and below"},
+  stPdf: {ko: "PDF를 그림으로 바꾸는 중…", en: "Converting PDF pages…"}, stPdfFail: {ko: "PDF를 읽지 못했습니다", en: "Could not read the PDF"},
+  stPdfCut: {ko: "PDF가 길어서 앞의 40쪽만 넣었습니다", en: "Long PDF: only the first 40 pages were added"},
+  vimeoPh: {ko: "Vimeo 주소를 붙여넣고 Enter", en: "Paste a Vimeo link, then Enter"}
+};
+const L = k => UI[k][lang];
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
+const cap = t => t ? t[0].toUpperCase() + t.slice(1) : "";
+const rgb = h => { h = String(h).replace("#", ""); if (h.length === 3) h = [...h].map(c => c + c).join("");
+  return [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16) / 255); };
+const ink = h => { const [r, g, b] = rgb(h).map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4);
+  return .2126 * r + .7152 * g + .0722 * b > .36 ? "#000" : "#fff"; };
+/* 글자색: 배경과 대비가 너무 낮으면(흰 바탕에 흰 글자 등) 자동으로 검정/흰색 쪽으로 바꿔 씀 */
+const relLum = h => { const [r, g, b] = rgb(h).map(v => v <= .04045 ? v / 12.92 : ((v + .055) / 1.055) ** 2.4); return .2126 * r + .7152 * g + .0722 * b; };
+const autoFg = bg => ink(bg) === "#000" ? "#14161a" : "#f4f1ea";
+const fgFor = p => { const a = relLum(p.bg), b = relLum(p.fg || "#000"), c = (Math.max(a, b) + .05) / (Math.min(a, b) + .05); return c < 3 ? autoFg(p.bg) : p.fg; };
+const RATIOS = [["16:9", 1.78], ["3:2", 1.5], ["4:3", 1.33], ["1:1", 1], ["3:4", .75], ["9:16", .56], ["21:9", 2.33], ["11:5", 2.2], ["16:10", 1.6]];
+const ratioName = r => (RATIOS.find(x => x[1] == r) || [(+r).toFixed(2) + ":1"])[0];
+const CE = (() => { const d = document.createElement("div"); d.setAttribute("contenteditable", "plaintext-only");
+  return d.contentEditable === "plaintext-only" ? "plaintext-only" : "true"; })();
+const ce = (bind, text, tag, cls) => `<${tag}${cls ? ` class="${cls}"` : ""}${editing ? ` contenteditable="${CE}" spellcheck="false" data-bind="${bind}"` : ""}>${esc(text)}</${tag}>`;
+const btn = (a, label, d = "", cls = "") => `<button type="button" class="eb ${cls}" data-a="${a}" ${d}>${label}</button>`;
+const imgStyle = it => { const x = it.x ?? 50, y = it.y ?? 50; return `object-fit:${it.fit === "contain" ? "contain" : "cover"};object-position:${x}% ${y}%;transform:scale(${it.z ?? 1});transform-origin:${x}% ${y}%`; };
+const openSet = new Set(); let listing = false;   /* LIST 보기: 접힌 띠 목록, 펼친 프로젝트 번호들 */
+const slotItems = sl => sl.items && sl.items.length ? sl.items : Array.from({length: sl.n || 1}, () => ({}));
+const at = t => +t.parentElement.dataset.i || 0;   /* 지금 보이는 장 번호 */
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+/* ───────── 그리기 ───────── */
+const NAVS = `<button class="nav prev" type="button" aria-label="Previous image"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="15 4 7 12 15 20"/></svg></button><button class="nav next" type="button" aria-label="Next image"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 4 17 12 9 20"/></svg></button>`;
+
+function slotHtml(pi, row, ri, sl, si) {
+  const r = row.length === 2 ? row[0].r : sl.r, items = slotItems(sl), many = items.length > 1, d = `data-p="${pi}" data-r="${ri}" data-s="${si}"`;
+  const slides = items.map((it, k) => `<div class="slide"${it.fit === "contain" ? ` style="background:${esc(it.bg || "var(--pbg)")}"` : ""}>` + (it.vimeo
+    ? `<a class="vid" href="https://vimeo.com/${esc(it.vimeo)}" target="_blank" rel="noopener"><span class="play" aria-hidden="true"></span><span class="vl">Vimeo ↗</span></a>`
+    : it.src ? `<img src="${esc(show(it.src))}" alt="" draggable="false" decoding="async" style="${imgStyle(it)}"${k ? ' loading="lazy"' : ""}>`
+    : `<span class="phl">${ratioName(r)}</span>`) + `</div>`).join("");
+  const tools = !editing ? "" : `<div class="stools">` + btn("img-add", "＋ " + L("image") + " · PDF", d) + btn("vimeo", "＋ Vimeo", d)
+    + `<select class="eb" data-a="ratio" ${d} aria-label="Ratio">${(RATIOS.some(x => x[1] == r) ? "" : `<option value="${r}" selected>${(+r).toFixed(2)}:1</option>`) + RATIOS.map(([n, v]) => `<option value="${v}"${v == r ? " selected" : ""}>${n}</option>`).join("")}</select>`
+    + (many ? btn("s-prev", "‹", d) + btn("s-next", "›", d) : "")
+    + `<label class="eb zoom">${L("zoom")}<input type="range" min="1" max="3" step="0.01" value="1" data-a="zoom" ${d}></label>`
+    + btn("fit", L("fitIn"), d) + `<label class="eb ibg" hidden>${L("margin")}<input type="color" value="#ffffff" data-a="ibg" ${d}></label>`
+    + btn("item-del", L("delItem"), d) + (SITE.projects[pi].rows.flat().length > 1 ? btn("slot-del", L("delSlot"), d) : "") + `</div>`;
+  return `<figure class="ph${many ? " multi" : ""}" style="--r:${r}" ${d}><div class="track">${slides}</div>`
+    + (many ? NAVS + `<span class="count">1/${items.length}</span>` : "") + tools + `</figure>`;
+}
+
+function projectHtml(p, i) {
+  const arrow = ink(p.bg), d = `data-p="${i}"`;
+  const kind = editing
+    ? SITE.tags.map(t => `<button type="button" class="chip" data-a="tag" ${d} data-t="${t}" aria-pressed="${p.tags.includes(t)}">${cap(t)}</button>`).join("")
+    : p.tags.map(t => `<a href="#${t}">${cap(t)}</a>`).join(", ");
+  const ptools = !editing ? "" : `<div class="ptools">` + btn("p-up", "↑", d) + btn("p-down", "↓", d)
+    + `<label class="eb">${L("bg")}<input type="color" value="${esc(p.bg)}" data-a="bg" ${d}></label>`
+    + btn("pick", "⌖ " + L("pick"), `${d} data-k="bg"`)
+    + `<label class="eb">${L("fg")}<input type="color" value="${esc(fgFor(p))}" data-a="fg" ${d}></label>` + btn("pick", "⌖ " + L("pick"), `${d} data-k="fg"`)
+    + btn("p-del", L("delProject"), d) + `</div>`;
+  const meta = p.meta.map((m, j) => !(editing || T(m)) ? "" : `<div>${ce(`p.${i}.mk.${j}`, m.k, "dt", "label")}${ce(`p.${i}.mv.${j}`, T(m), "dd")}`
+    + (editing ? btn("m-del", "×", `${d} data-j="${j}"`, "x") : "") + `</div>`).join("");
+  /* 편집 도구(행 버튼, 높이 막대)는 행 위에 겹쳐 놓아서 사진 사이 간격이 실제 화면과 똑같음 */
+  const nRows = Math.min(p.rows.length, 3);
+  const rows = p.rows.slice(0, 3).map((row, ri) => `<div class="row">` + row.slice(0, 2).map((sl, si) => slotHtml(i, row, ri, sl, si)).join("")
+    + (editing ? `<div class="rsize" data-p="${i}" data-r="${ri}"${ri === nRows - 1 ? ' data-last="1"' : ""} title="${L(ri === nRows - 1 ? "resizeLast" : "resize")}"><i></i></div>`
+      + `<div class="rtools">` + (p.rows.length > 1 ? btn("row-up", "↑", `${d} data-r="${ri}"`) + btn("row-down", "↓", `${d} data-r="${ri}"`) : "") + (row.length < 2 ? btn("slot-add", "＋ " + L("slot"), `${d} data-r="${ri}"`) : "") + (p.rows.length > 1 ? btn("row-del", L("delRow"), `${d} data-r="${ri}"`) : "")
+      + (ri === nRows - 1 && p.rows.length < 3 ? btn("row-add", "＋ " + L("row"), d) : "") + `</div>` : "") + `</div>`).join("");
+  return `<article class="project${openSet.has(i) ? " open" : ""}" id="p-${i}" data-tags="${p.tags.join(" ")}" data-band="${esc(p.band || p.bg)}" data-arrow="${arrow}" style="--pbg:${esc(p.bg)};--pfg:${esc(fgFor(p))};--arrow:${arrow}">
+    <button type="button" class="lrow" data-p="${i}" aria-expanded="${openSet.has(i)}"><span class="lt">${esc(p.title)}</span><span class="ly">${esc(p.year)}</span><span class="lc">${esc(T(p.meta.find(m => m.k === "Category")) || p.tags.map(cap).join(", "))}</span></button>
+    <div class="kind">${kind}</div>${ptools}
+    <div class="body"><div class="text">
+      <div class="head">${ce(`p.${i}.title`, p.title, "h2")}${ce(`p.${i}.year`, p.year, "div", "year")}</div>
+      ${ce(`p.${i}.desc`, T(p.desc), "div", "desc")}
+      <dl class="meta">${meta}</dl>${editing ? btn("m-add", "＋ " + L("field"), d) : ""}
+    </div><div class="rows">${rows}</div></div>
+    <button class="down" type="button" aria-label="Next project"><svg viewBox="0 0 50 60" aria-hidden="true"><path d="M25 0v59M1 35l24 24 24-24"/></svg></button>
+  </article>`;
+}
+
+const firstImage = p => { for (const row of p.rows) for (const sl of row) for (const it of sl.items || []) if (it.src) return it; return null; };
+/* MAP 아이콘: 프로젝트의 첫 태그로 정함. 사이니지=화살표, 공간=정육면체, 책(editorial)=책, 브랜드=가면, 그 밖=걷는 사람 */
+const ICONS = {
+  arrow: `<path d="M3 10.4h11.3L10 6.1 12.1 4l7.9 8-7.9 8-2.1-2.1 4.3-4.3H3z"/>`,
+  cube: `<path d="M12 2l8.7 5v10L12 22l-8.7-5V7z"/><path class="cut" d="M12 12l8.7-5M12 12L3.3 7M12 12v10"/>`,
+  book: `<path d="M2 5.2c3-1.3 6.6-1.2 9.2.7v14c-2.6-1.9-6.2-2-9.2-.7zM22 5.2c-3-1.3-6.6-1.2-9.2.7v14c2.6-1.9 6.2-2 9.2-.7z"/>`,
+  mask: `<path fill-rule="evenodd" d="M4 3c5 1.2 11 1.2 16 0v8.5c0 5.2-3.6 9.5-8 9.5s-8-4.3-8-9.5zM6.4 9.3c1.2 1.5 3.3 1.5 4.4 0-1.2-1.3-3.2-1.3-4.4 0zM13.2 9.3c1.2 1.5 3.3 1.5 4.4 0-1.2-1.3-3.2-1.3-4.4 0zM7.6 14.2c2.6 1.6 6.2 1.6 8.8 0-1.3 3.9-7.5 3.9-8.8 0z"/>`,
+  walk: `<ellipse cx="13.3" cy="3.3" rx="1.9" ry="2.1"/><path d="M11.4 6.3c1.4-.6 2.8-.2 3.4 1l1.1 2.5c.4.9 1.3 1.5 2.5 1.8l1.2.3-.4 1.5-1.7-.3c-1.5-.3-2.6-1.1-3.3-2.2l-.5 2.9 2.3 2.7c.3.4.5.8.5 1.3l.4 5.200h-1.800l-.5-4.600-2.700-2.600-.9 3.300c-.1.400-.3.700-.6 1l-3.100 3.200-1.300-1.200 2.800-3.100 1.500-7.300-1.500.9-.6 3.100-1.700-.3.7-3.900c.1-.4.3-.7.7-.9z"/>`
+};
+const iconOf = p => ({signage: "arrow", space: "cube", editorial: "book", branding: "mask"}[p.tags[0]] || "walk");
+function mapHtml() {
+  return SITE.projects.map((p, i) => {
+    const [x, y] = p.map || [0, 0], it = firstImage(p);
+    return `<a class="pin${x > .15 ? " flip" : ""}${x > .7 ? " end" : ""}" href="#p-${i}" data-p="${i}" style="left:${(50 + x * 41).toFixed(2)}%;top:${(50 - y * 38).toFixed(2)}%">
+      <svg class="ic${relLum(p.bg) < .1 ? " ring" : ""}" viewBox="0 0 24 24" fill="${esc(p.bg)}" aria-label="${esc(p.title)}" role="img">${ICONS[iconOf(p)]}</svg>
+      <span class="cap">${it ? `<span class="cimg"><img src="${esc(show(it.src))}" alt="" draggable="false" loading="lazy" style="${imgStyle(it)}"></span>` : ""}<b>${esc(p.title)}</b><span class="sub">${esc(p.year)} · ${p.tags.map(cap).join(", ")}</span><span class="line">${esc(T(p.desc).split(/\n\s*\n/)[0])}</span></span>
+    </a>`;
+  }).join("");
+}
+
+function infoHtml() {
+  return SITE.info.map((col, c) => `<div class="cr">` + col.map((b, k) => {
+    const d = `data-c="${c}" data-b="${k}"`;
+    return `<div class="b${b.l ? " l" + b.l : ""}">${ce(`i.${c}.${k}.h`, b.h, "h3")}`
+      + (b.lines || []).map((ln, n) => ce(`i.${c}.${k}.l.${n}`, T(ln), "p")).join("")
+      + (b.email != null ? ce(`i.${c}.${k}.email`, b.email, "span", "addr") + `<button class="copy" type="button" data-a="copy">${L("copy")}</button>` : "")
+      + (editing ? `<div class="btools">` + btn("b-out", "←", d) + btn("b-in", "→", d) + btn("l-add", "＋ " + L("line"), d) + btn("b-add", "＋ " + L("block"), d) + btn("b-del", "×", d) + `</div>` : "")
+      + `</div>`;
+  }).join("") + (editing && !col.length ? btn("b-add", "＋ " + L("block"), `data-c="${c}" data-b="-1"`) : "") + `</div>`).join("");
+}
+
+function renderAll(jump) {
+  const key = ph => ph.dataset.p + "-" + ph.dataset.r + "-" + ph.dataset.s, pos = {};
+  $$(".ph").forEach(ph => pos[key(ph)] = at($(".track", ph)));
+  $("#view-work").innerHTML = SITE.projects.map(projectHtml).join("");
+  $("#pins").innerHTML = mapHtml();
+  $("#info").innerHTML = infoHtml();
+  $("#tags").innerHTML = `<a class="pill" href="#all" data-tag="">All</a>` + SITE.tags.map(t => `<a class="pill" href="#${t}" data-tag="${t}">${cap(t)}</a>`).join("");
+  $("#empty").textContent = L("empty"); $("#to-top").textContent = L("top");
+  $("#ed-add").textContent = L("addProject"); $("#ed-save").textContent = L("save"); $("#ed-exit").textContent = L("exit");
+  langBtn.textContent = lang.toUpperCase(); langBtn.setAttribute("aria-label", lang === "ko" ? "Switch to English" : "한국어로 전환");
+  document.documentElement.lang = lang;
+  applyView();
+  $$(".ph").forEach(ph => {
+    const t = $(".track", ph), k = key(ph), i = jump && jump.key === k ? jump.i : pos[k];
+    setSlide(ph, Math.min(i || 0, t.children.length - 1));
+  });
+}
+/* 칸의 장수 표시, 숫자 커서, 확대 슬라이더를 지금 보이는 장에 맞춤 */
+function syncSlot(ph) {
+  const t = $(".track", ph), c = $(".count", ph), i = at(t);
+  if (c) { c.textContent = (i + 1) + "/" + t.children.length; if (curPh === ph) cur.textContent = c.textContent; }
+  const z = $('[data-a="zoom"]', ph), it = z && itemOf(ph);
+  if (z) { const small = !!it && it.fit === "contain", fb = $('[data-a="fit"]', ph), mg = $(".ibg", ph);
+    z.min = small ? .2 : 1; z.value = (it && it.z) || 1;
+    fb.textContent = L(small ? "fitFill" : "fitIn"); fb.hidden = !it || !it.src; mg.hidden = !small;
+    if (small) $("input", mg).value = /^#[0-9a-f]{6}$/i.test(it.bg || "") ? it.bg : SITE.projects[ph.dataset.p].bg; }
+}
+const slotOf = el => SITE.projects[el.dataset.p].rows[el.dataset.r][el.dataset.s];
+const itemOf = ph => (slotOf(ph).items || [])[at($(".track", ph))];
+
+/* ───────── 화면 전환 ───────── */
+const langBtn = $("#lang-btn"), genreBtn = $("#genre-btn"), genreMenu = $("#tags"), topBar = $(".top"), root = document.documentElement;
+const openGenre = on => { genreMenu.hidden = !on; genreBtn.setAttribute("aria-expanded", on); };
+function applyView() {
+  const h = location.hash.slice(1), info = h === "info", map = h === "map", tag = SITE.tags.includes(h) ? h : "";
+  $("#view-info").hidden = !info; $("#view-map").hidden = !map; $("#view-work").hidden = info || map;
+  let shown = 0;
+  $$(".project").forEach(a => { const ok = !tag || a.dataset.tags.split(" ").includes(tag); a.hidden = !ok; if (ok) shown++; });
+  $("#empty").hidden = info || map || shown > 0;
+  const vis = $$(".project:not([hidden])");
+  vis.forEach((a, i) => $(".down", a).hidden = i === vis.length - 1);
+  const mark = (el, on) => on ? el.setAttribute("aria-current", "true") : el.removeAttribute("aria-current");
+  $$("#tags a").forEach(a => mark(a, !info && !map && a.dataset.tag === tag));
+  mark(genreBtn, !!tag); mark($("#nav-map"), map); mark($("#nav-info"), info);
+  document.body.classList.toggle("listing", listing);
+  $("#nav-list").setAttribute("aria-pressed", listing && !info && !map); $("#nav-edit").setAttribute("aria-pressed", editing);
+  paintBand();
+}
+function route() {
+  applyView(); openGenre(false);
+  const h = location.hash.slice(1), target = /^p-\d+$/.test(h) ? document.getElementById(h) : null;
+  if (target && listing) { openSet.add(+h.slice(2)); target.classList.add("open"); }
+  window.scrollTo(0, target ? target.getBoundingClientRect().top + scrollY - topBar.offsetHeight : 0);
+  paintBand();
+}
+/* 상단 띠: 지금 띠 바로 아래에 걸린 프로젝트의 배경색으로 바뀜. 없으면 검정 */
+function paintBand() {
+  root.style.setProperty("--top-h", topBar.offsetHeight + "px");
+  const y = topBar.getBoundingClientRect().bottom + 1; let hit = null;
+  if (!$("#view-work").hidden) for (const a of $$(".project:not([hidden])")) {
+    const r = a.getBoundingClientRect(); if (r.top <= y && r.bottom > y) { hit = a; break; } }
+  const c = hit ? hit.dataset.band : "#0c0c0d";
+  root.style.setProperty("--band", c);
+  root.style.setProperty("--band-fg", ink(c) === "#000" ? "#14161a" : "#f4f4f1");
+}
+let bandTick = 0;
+const queueBand = () => { if (!bandTick) bandTick = requestAnimationFrame(() => { bandTick = 0; paintBand(); }); };
+addEventListener("scroll", queueBand, {passive: true});
+addEventListener("resize", queueBand);
+addEventListener("hashchange", route);
+genreBtn.addEventListener("click", e => { e.stopPropagation(); openGenre(genreMenu.hidden); });
+document.addEventListener("click", () => openGenre(false));
+document.addEventListener("keydown", e => { if (e.key === "Escape") openGenre(false); });
+langBtn.addEventListener("click", () => { lang = lang === "ko" ? "en" : "ko"; try { localStorage.setItem("lang", lang); } catch {} renderAll(); if (editing) status(L(dirty ? "stDirty" : "stEdit")); });
+/* LIST: 프로젝트를 색 띠 목록으로 접었다 폈다. 띠를 누르면 그 프로젝트만 펼쳐짐 */
+$("#nav-list").addEventListener("click", () => {
+  const away = ["#info", "#map"].includes(location.hash);
+  listing = away ? true : !listing; openSet.clear();
+  if (away) location.hash = "#all"; else { renderAll(); window.scrollTo(0, 0); }
+});
+/* 편집은 Claude 안에서만: 밖에 올린 사이트(예: GitHub Pages)에서는 EDIT 버튼과 암호 입력이 아예 나오지 않음 */
+const CAN_EDIT = !!window.claude;
+$("#nav-edit").hidden = !CAN_EDIT;
+$("#nav-edit").addEventListener("click", () => editing ? $("#ed-exit").click() : enterEdit());
+$("#to-top").addEventListener("click", e => { if (!["#info", "#map"].includes(location.hash)) e.preventDefault(); window.scrollTo(0, 0); });
+
+/* 슬라이드: 사진의 왼쪽 절반은 이전, 오른쪽 절반은 다음. 커서는 "2/5" 숫자 */
+function setSlide(ph, i) {
+  ph.dataset.i = i; [...$(".track", ph).children].forEach((sl, k) => sl.classList.toggle("on", k === i)); syncSlot(ph);
+}
+function goSlide(ph, dir) { const t = $(".track", ph), n = t.children.length; setSlide(ph, (at(t) + dir + n) % n); }
+/* 터치: 옆으로 밀어서 넘기기 */
+let sw = null;
+document.addEventListener("touchstart", e => { const ph = !editing && e.target.closest && e.target.closest(".ph.multi"); sw = ph ? {ph, x: e.touches[0].clientX, y: e.touches[0].clientY} : null; }, {passive: true});
+document.addEventListener("touchend", e => { if (!sw) return; const dx = e.changedTouches[0].clientX - sw.x, dy = e.changedTouches[0].clientY - sw.y;
+  if (Math.abs(dx) > 36 && Math.abs(dx) > Math.abs(dy) * 1.5) { goSlide(sw.ph, dx < 0 ? 1 : -1); swiped = Date.now(); } sw = null; }, {passive: true});
+let swiped = 0;
+const cur = $("#cur"); let curPh = null;
+document.addEventListener("pointermove", e => {
+  const ph = !editing && e.pointerType === "mouse" && e.target.closest ? e.target.closest(".ph.multi") : null;
+  curPh = ph; cur.hidden = !ph; if (!ph) return;
+  cur.style.left = e.clientX + "px"; cur.style.top = e.clientY + "px";
+  cur.textContent = $(".count", ph).textContent;
+  cur.style.color = ph.closest(".project").dataset.arrow;
+});
+addEventListener("scroll", () => { cur.hidden = true; curPh = null; }, {passive: true});
+
+/* ───────── 암호: 이름을 세 번 연달아 누르면 점 네 개 ───────── */
+const home = $("#nav-home"), lockbox = $("#lockbox"), pinIn = $("#pin-in"); let clicks = 0, clickT = 0;
+const drawDots = () => $$("#dots i").forEach((d, i) => d.classList.toggle("on", i < pinIn.value.length));
+const closeLock = () => { lockbox.hidden = true; home.hidden = false; pinIn.value = ""; };
+home.addEventListener("click", e => {
+  const now = Date.now(); clicks = now - clickT < 600 ? clicks + 1 : 1; clickT = now;
+  if (clicks >= 3 && !editing && CAN_EDIT) { e.preventDefault(); clicks = 0; home.hidden = true; lockbox.hidden = false; pinIn.value = ""; drawDots(); pinIn.focus(); return; }
+  window.scrollTo(0, 0);
+});
+pinIn.addEventListener("input", () => {
+  pinIn.value = pinIn.value.replace(/\D/g, "").slice(0, 4); drawDots();
+  if (pinIn.value.length === 4) { const ok = pinIn.value === "9646"; setTimeout(() => { closeLock(); if (ok) enterEdit(); }, 120); }
+});
+pinIn.addEventListener("blur", () => setTimeout(closeLock, 150));
+pinIn.addEventListener("keydown", e => { if (e.key === "Escape") closeLock(); });
+
+/* ───────── 편집 모드 ───────── */
+const status = (t, warn) => { const s = $("#ed-status"); s.textContent = t; s.style.color = warn ? "var(--ed-warn)" : ""; };
+const touch = () => { dirty = true; status(L("stDirty")); };
+function enterEdit() { if (editing) return; editing = true; dirty = false; snapshot = JSON.stringify(SITE); document.body.classList.add("editing"); $("#edbar").hidden = false; renderAll(); status(L("stEdit")); }
+function exitEdit() { editing = false; dirty = false; document.body.classList.remove("editing"); $("#edbar").hidden = true; renderAll(); }
+
+/* 글자 고치기: 화면의 글자 → 데이터 */
+function setBind(path, val) {
+  const a = path.split(".");
+  if (a[0] === "p") { const p = SITE.projects[a[1]];
+    if (a[2] === "title" || a[2] === "year") p[a[2]] = val;
+    else if (a[2] === "desc") { if (typeof p.desc === "string") p.desc = {ko: p.desc, en: p.desc}; p.desc[lang] = val; }
+    else if (a[2] === "mk") p.meta[a[3]].k = val;
+    else if (a[2] === "mv") p.meta[a[3]][lang] = val;
+  } else { const b = SITE.info[a[1]][a[2]];
+    if (a[3] === "h") b.h = val; else if (a[3] === "email") b.email = val;
+    else { if (typeof b.lines[a[4]] === "string") b.lines[a[4]] = {ko: b.lines[a[4]], en: b.lines[a[4]]}; b.lines[a[4]][lang] = val; } }
+}
+document.addEventListener("input", e => {
+  const el = e.target;
+  if (el.dataset && el.dataset.bind) { setBind(el.dataset.bind, el.innerText.replace(/\n+$/, "")); touch(); return; }
+  const a = el.dataset && el.dataset.a; if (!editing || !a) return;
+  if (a === "bg" || a === "fg") setColor(el.dataset.p, a, el.value);
+  if (a === "ibg") { const ph = el.closest(".ph"), it = itemOf(ph); if (it) { it.bg = el.value; $(".track", ph).children[at($(".track", ph))].style.background = el.value; touch(); } }
+  if (a === "zoom") { const ph = el.closest(".ph"), it = itemOf(ph); if (it && it.src) { it.z = +el.value; $("img", $(".track", ph).children[at($(".track", ph))]).style.cssText = imgStyle(it); touch(); } }
+});
+document.addEventListener("change", e => {
+  const el = e.target; if (!editing || el.dataset.a !== "ratio") return;
+  SITE.projects[el.dataset.p].rows[el.dataset.r].forEach(sl => sl.r = +el.value);
+  touch(); renderAll();
+});
+document.addEventListener("keydown", e => {
+  const el = e.target; if (!editing || !el.dataset || !el.dataset.bind) return;
+  if (e.key === "Enter" && !/\.desc$/.test(el.dataset.bind) && !e.shiftKey) { e.preventDefault(); el.blur(); }
+});
+document.addEventListener("paste", e => {   /* 붙여넣기는 글자만 */
+  if (!e.target.closest || !e.target.closest("[data-bind]") || CE === "plaintext-only") return;
+  e.preventDefault(); document.execCommand("insertText", false, (e.clipboardData || {getData: () => ""}).getData("text/plain"));
+});
+document.addEventListener("focusout", e => {   /* Info에서 비운 줄은 지움 */
+  const b = e.target.dataset && e.target.dataset.bind; if (!editing || !b || !/^i\.\d+\.\d+\.l\.\d+$/.test(b) || e.target.innerText.trim()) return;
+  const a = b.split("."); SITE.info[a[1]][a[2]].lines.splice(a[4], 1); touch(); renderAll();
+});
+
+/* 이미지 넣기: 1.2MB 이하이고 긴 변 2800px 이하인 JPEG/WebP는 원본 그대로. 그 밖에는 긴 변 2800px, 품질 88의 JPEG로. GIF는 그대로 */
+const picker = Object.assign(document.createElement("input"), {type: "file", accept: "image/*,application/pdf", multiple: true}); let pickFor = null;
+async function shrink(file) {
+  if (/gif|svg/.test(file.type)) return file;
+  let bmp; try { bmp = await createImageBitmap(file); } catch { return file; }
+  const k = Math.min(1, 2800 / Math.max(bmp.width, bmp.height));
+  if (k === 1 && /jpeg|webp/.test(file.type) && file.size < 1.2e6) return file;
+  const c = Object.assign(document.createElement("canvas"), {width: Math.round(bmp.width * k), height: Math.round(bmp.height * k)}), g = c.getContext("2d");
+  g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height); g.imageSmoothingQuality = "high"; g.drawImage(bmp, 0, 0, c.width, c.height);
+  return await new Promise(res => c.toBlob(b => res(b || file), "image/jpeg", .88));
+}
+/* PDF: 쪽마다 그림으로 바꿔 슬라이드로 넣음. 변환 도구는 PDF를 처음 넣을 때만 불러옴 */
+const PDFJS = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/", PDF_MAX = 40;
+const loadScript = src => new Promise((res, rej) => { const el = Object.assign(document.createElement("script"), {src}); el.onload = res; el.onerror = rej; document.head.append(el); });
+let pdfReady = null;
+async function pdfPages(file) {
+  pdfReady = pdfReady || loadScript(PDFJS + "pdf.min.js").then(() => loadScript(PDFJS + "pdf.worker.min.js"));   /* 워커 스크립트를 같은 창에 올려 별도 워커 없이 변환 */
+  try { await pdfReady; } catch (err) { pdfReady = null; throw err; }
+  const doc = await window.pdfjsLib.getDocument({data: await file.arrayBuffer()}).promise, n = Math.min(doc.numPages, PDF_MAX), pages = [];
+  for (let i = 1; i <= n; i++) {
+    status(L("stPdf") + " " + i + "/" + n);
+    const page = await doc.getPage(i), v0 = page.getViewport({scale: 1}), vp = page.getViewport({scale: Math.min(4, 2800 / Math.max(v0.width, v0.height))});
+    const c = Object.assign(document.createElement("canvas"), {width: Math.round(vp.width), height: Math.round(vp.height)}), g = c.getContext("2d");
+    g.fillStyle = "#fff"; g.fillRect(0, 0, c.width, c.height);
+    await page.render({canvasContext: g, viewport: vp}).promise;
+    pages.push(await new Promise(res => c.toBlob(res, "image/jpeg", .9)));
+    c.width = c.height = 0; page.cleanup();
+  }
+  return {pages: pages.filter(Boolean), total: doc.numPages};
+}
+picker.addEventListener("change", () => { const files = [...picker.files]; picker.value = ""; addFiles(pickFor, files); });
+/* 고른 파일이나 끌어다 놓은 파일을 그 칸에 추가. 이미 사진이 있으면 뒤에 붙어 슬라이드가 됨 */
+async function addFiles(d, files) {
+  const isPdf = f => f.type === "application/pdf" || /\.pdf$/i.test(f.name);
+  files = files.filter(f => /^image\//.test(f.type) || isPdf(f)); if (!d || !files.length) return;
+  const sl = SITE.projects[d.p].rows[d.r][d.s]; let skipped = false, note = "";
+  const blobs = [];
+  for (const f of files) {
+    if (!isPdf(f)) { blobs.push(await shrink(f)); continue; }
+    try { const r = await pdfPages(f); blobs.push(...r.pages); if (r.total > r.pages.length) note = L("stPdfCut"); } catch { note = L("stPdfFail"); }
+  }
+  if (!blobs.length) return status(note || L("stPdfFail"), true);
+  sl.items = sl.items || []; delete sl.n;
+  for (const blob of blobs) { if (blob.size > 15 * 1048576) { skipped = true; continue; }
+    const url = URL.createObjectURL(blob); pending.set(url, blob); sl.items.push({src: url, x: 50, y: 50, z: 1}); }
+  touch(); if (skipped) status(L("stGif"), true); else if (note) status(note, true);
+  renderAll({key: d.p + "-" + d.r + "-" + d.s, i: sl.items.length - 1});
+}
+/* 끌어다 놓기: 편집 모드에서 이미지 파일을 칸 위에 놓으면 그 칸에 들어감 */
+const hasFiles = e => e.dataTransfer && [...e.dataTransfer.types].includes("Files");
+let dropPh = null;
+const markDrop = ph => { if (dropPh && dropPh !== ph) dropPh.classList.remove("drop"); dropPh = ph; if (ph) ph.classList.add("drop"); };
+document.addEventListener("dragover", e => {
+  if (!editing || !hasFiles(e)) return;
+  e.preventDefault(); const ph = e.target.closest && e.target.closest(".ph"); markDrop(ph); e.dataTransfer.dropEffect = ph ? "copy" : "none";
+});
+document.addEventListener("dragleave", e => { if (!e.relatedTarget) markDrop(null); });
+document.addEventListener("drop", e => {
+  if (!editing || !hasFiles(e)) return;
+  e.preventDefault(); const ph = e.target.closest && e.target.closest(".ph"); markDrop(null);
+  if (ph) addFiles({p: ph.dataset.p, r: ph.dataset.r, s: ph.dataset.s}, [...e.dataTransfer.files]);
+});
+
+/* 프로젝트 색 바꾸기(색상 선택기와 사진에서 찍기 공통) */
+function setColor(pi, k, v) {
+  const p = SITE.projects[pi], art = $("#p-" + pi); p[k] = v;
+  art.style.setProperty(k === "bg" ? "--pbg" : "--pfg", v);
+  const inp = $(`input[data-a="${k}"]`, art); if (inp) inp.value = v;
+  if (k === "bg") { const c = ink(v); art.dataset.band = p.band || v; art.dataset.arrow = c; art.style.setProperty("--arrow", c); paintBand();
+    const f = fgFor(p); if (f !== p.fg) { p.fg = f; art.style.setProperty("--pfg", f); const fi = $('input[data-a="fg"]', art); if (fi) fi.value = f; } }
+  touch();
+}
+/* 사진에서 색 찍기: 누른 지점이 원본 사진의 어느 픽셀인지 계산해서 그 색을 읽음 */
+let picking = null;
+const stopPick = () => { picking = null; document.body.classList.remove("picking"); };
+function colorAt(img, e) {
+  const st = getComputedStyle(img), z = new DOMMatrixReadOnly(st.transform).a || 1, box = img.getBoundingClientRect();
+  const w = box.width / z, h = box.height / z, nw = img.naturalWidth, nh = img.naturalHeight, s = st.objectFit === "contain" ? Math.min(w / nw, h / nh) : Math.max(w / nw, h / nh);
+  const [px, py] = st.objectPosition.split(" ").map(parseFloat);
+  const sx = ((e.clientX - box.left) / z - (w - nw * s) * px / 100) / s, sy = ((e.clientY - box.top) / z - (h - nh * s) * py / 100) / s;
+  const c = Object.assign(document.createElement("canvas"), {width: 1, height: 1}), g = c.getContext("2d", {willReadFrequently: true});
+  g.drawImage(img, clamp(sx, 0, nw - 1), clamp(sy, 0, nh - 1), 1, 1, 0, 0, 1, 1);
+  const d = g.getImageData(0, 0, 1, 1).data;
+  return "#" + [d[0], d[1], d[2]].map(v => v.toString(16).padStart(2, "0")).join("");
+}
+document.addEventListener("keydown", e => { if (e.key === "Escape" && picking) { stopPick(); status(L("stDirty")); } });
+
+/* 사진 위치 맞추기: 편집 모드에서 사진을 끌면 칸 안에서 움직임. MAP에서는 섬네일을 끌어 좌표를 옮김 */
+let drag = null;
+document.addEventListener("pointerdown", e => {
+  if (!editing || !e.target.closest) return;
+  const img = e.target.closest(".slide img"), pin = e.target.closest(".pin"), bar = e.target.closest(".rsize");
+  if (picking) { if (img) { e.preventDefault(); try { setColor(picking.p, picking.k, colorAt(img, e)); } catch {} stopPick(); } return; }
+  if (bar) {   /* 위아래 행 사이 막대: 위 행이 커지는 만큼 아래 행이 줄어듦 */
+    const rows = SITE.projects[bar.dataset.p].rows, ri = +bar.dataset.r, up = bar.parentElement, dn = bar.dataset.last ? null : up.nextElementSibling;
+    if (getComputedStyle(up).flexDirection === "column") return;
+    drag = {bar, up, dn, ru: rows[ri], rd: dn ? rows[ri + 1] : null, y0: e.clientY, hu: up.clientHeight, hd: dn ? dn.clientHeight : 0, wu: up.firstElementChild.clientWidth, wd: dn ? dn.firstElementChild.clientWidth : 0};
+    bar.setPointerCapture(e.pointerId); e.preventDefault(); return; }
+  if (img) { const ph = img.closest(".ph"), it = itemOf(ph); if (!it) return;
+    drag = {img, it, x0: e.clientX, y0: e.clientY, sx: it.x ?? 50, sy: it.y ?? 50, w: ph.clientWidth, h: ph.clientHeight}; img.setPointerCapture(e.pointerId); e.preventDefault(); }
+  else if (pin) { drag = {pin, p: SITE.projects[pin.dataset.p], box: pin.closest(".map").getBoundingClientRect()}; pin.setPointerCapture(e.pointerId); e.preventDefault(); }
+});
+document.addEventListener("pointermove", e => {
+  if (!drag) return;
+  if (drag.bar) {   /* 가운데 막대: 위가 커진 만큼 아래가 줄어듦. 맨 아래 막대: 그 행만 */
+    const dy = clamp(e.clientY - drag.y0, 70 - drag.hu, drag.dn ? drag.hd - 70 : 1600), ru = +(drag.wu / (drag.hu + dy)).toFixed(3);
+    drag.ru.forEach(sl => sl.r = ru); $$(".ph", drag.up).forEach(ph => ph.style.setProperty("--r", ru));
+    if (drag.dn) { const rd = +(drag.wd / (drag.hd - dy)).toFixed(3); drag.rd.forEach(sl => sl.r = rd); $$(".ph", drag.dn).forEach(ph => ph.style.setProperty("--r", rd)); }
+    return; }
+  if (drag.img) { const it = drag.it, sg = it.fit === "contain" ? 1 : -1;   /* 작게 넣은 사진은 끄는 방향 그대로, 꽉 채운 사진은 보이는 부분을 옮기는 것이라 반대 */
+    it.x = clamp(drag.sx + sg * (e.clientX - drag.x0) / drag.w * 100, 0, 100); it.y = clamp(drag.sy + sg * (e.clientY - drag.y0) / drag.h * 100, 0, 100); drag.img.style.cssText = imgStyle(it); }
+  else { const b = drag.box, x = clamp(((e.clientX - b.left) / b.width * 100 - 50) / 41, -1.1, 1.1), y = clamp((50 - (e.clientY - b.top) / b.height * 100) / 38, -1.1, 1.1);
+    drag.p.map = [+x.toFixed(2), +y.toFixed(2)]; drag.pin.style.left = (50 + x * 41) + "%"; drag.pin.style.top = (50 - y * 38) + "%"; drag.pin.classList.toggle("flip", x > .15); drag.pin.classList.toggle("end", x > .7); }
+});
+document.addEventListener("pointerup", () => { if (!drag) return; const wasBar = drag.bar; drag = null; touch(); if (wasBar) renderAll(); });
+
+/* 버튼들 */
+const newSlot = () => ({r: 1.78, items: []});
+const ACT = {
+  "p-add": () => { SITE.projects.push({title: "New Project", year: String(new Date().getFullYear()), tags: [], bg: "#dcdcd6", fg: "#14161a", map: [0, 0],
+      desc: {ko: "프로젝트 설명", en: "Project description"}, meta: [{k: "Client", ko: "", en: ""}, {k: "Role", ko: "", en: ""}], rows: [[newSlot()]]});
+    if (listing) openSet.add(SITE.projects.length - 1);
+    return () => { if (!["", "#all"].includes(location.hash)) location.hash = "#all"; const a = $("#p-" + (SITE.projects.length - 1)); a.hidden = false; a.scrollIntoView(); }; },
+  "p-del": d => { SITE.projects.splice(d.p, 1); openSet.clear(); },
+  "p-up": d => { const i = +d.p, P = SITE.projects; openSet.clear(); if (i > 0) [P[i - 1], P[i]] = [P[i], P[i - 1]]; },
+  "p-down": d => { const i = +d.p, P = SITE.projects; openSet.clear(); if (i < P.length - 1) [P[i + 1], P[i]] = [P[i], P[i + 1]]; },
+  "tag": d => { const t = SITE.projects[d.p].tags, k = t.indexOf(d.t); k < 0 ? t.push(d.t) : t.splice(k, 1); },
+  "m-add": d => { SITE.projects[d.p].meta.push({k: "Label", ko: "", en: ""}); },
+  "m-del": d => { SITE.projects[d.p].meta.splice(d.j, 1); },
+  "fit": (d, el) => { const it = itemOf(el.closest(".ph")); if (!it || !it.src) return; if (it.fit === "contain") { delete it.fit; it.z = Math.max(1, it.z || 1); } else { it.fit = "contain"; it.z = Math.min(it.z || 1, .8); } },
+  "row-up": d => { const R = SITE.projects[d.p].rows, i = +d.r; if (i > 0) [R[i - 1], R[i]] = [R[i], R[i - 1]]; },
+  "row-down": d => { const R = SITE.projects[d.p].rows, i = +d.r; if (i < R.length - 1) [R[i + 1], R[i]] = [R[i], R[i + 1]]; },
+  "row-add": d => { SITE.projects[d.p].rows.push([newSlot()]); },
+  "row-del": d => { const rows = SITE.projects[d.p].rows; if (rows.length > 1) rows.splice(d.r, 1); },
+  "slot-add": d => { const row = SITE.projects[d.p].rows[d.r]; row.push({r: row[0].r, items: []}); },
+  "slot-del": d => { const rows = SITE.projects[d.p].rows; if (rows.flat().length < 2) return; rows[d.r].splice(d.s, 1); if (!rows[d.r].length) rows.splice(d.r, 1); },
+  "item-del": (d, el) => { const ph = el.closest(".ph"), sl = slotOf(ph); if (sl.items && sl.items.length) sl.items.splice(at($(".track", ph)), 1); else delete sl.n; },
+  "b-in": d => { const b = SITE.info[d.c][d.b]; b.l = Math.min(2, (b.l || 0) + 1); },
+  "b-out": d => { const b = SITE.info[d.c][d.b]; b.l = Math.max(0, (b.l || 0) - 1); },
+  "l-add": d => { const b = SITE.info[d.c][d.b]; (b.lines = b.lines || []).push({ko: "내용", en: "Text"}); },
+  "b-add": d => { SITE.info[d.c].splice(+d.b + 1, 0, {l: d.b >= 0 ? SITE.info[d.c][d.b].l || 0 : 0, h: "Title:", lines: [{ko: "내용", en: "Text"}]}); },
+  "b-del": d => { SITE.info[d.c].splice(d.b, 1); }
+};
+let armed = null;
+document.addEventListener("click", e => {
+  if (!e.target.closest) return;
+  const down = e.target.closest(".down");
+  if (down) { let nx = down.parentElement.nextElementSibling; while (nx && nx.hidden) nx = nx.nextElementSibling;
+    if (nx) window.scrollTo(0, nx.getBoundingClientRect().top + scrollY - topBar.offsetHeight + 1); return; }
+  const lrow = e.target.closest(".lrow");
+  if (lrow) { const i = +lrow.dataset.p, art = lrow.parentElement, on = !openSet.has(i); on ? openSet.add(i) : openSet.delete(i);
+    art.classList.toggle("open", on); lrow.setAttribute("aria-expanded", on); paintBand(); return; }
+  const el = e.target.closest("[data-a]"), a = el && el.dataset.a;
+  if (a === "copy") { const adr = $(".addr", el.parentElement);
+    const sel = () => { const r = document.createRange(); r.selectNodeContents(adr); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
+    const done = k => { el.textContent = L(k); setTimeout(() => el.textContent = L("copy"), 1600); };
+    try { navigator.clipboard.writeText(adr.textContent).then(() => done("copied"), () => { sel(); done("selected"); }); } catch { sel(); done("selected"); }
+    return; }
+  if (editing && e.target.closest(".pin, .vid")) e.preventDefault();
+  if (!editing) {   /* 보기 모드: 슬라이드 넘기기 */
+    const ph = e.target.closest(".ph.multi"); if (!ph || e.target.closest(".vid") || Date.now() - swiped < 400) return;
+    const b = e.target.closest(".nav"), box = ph.getBoundingClientRect();
+    goSlide(ph, (b ? b.classList.contains("next") : e.clientX >= box.left + box.width / 2) ? 1 : -1); return; }
+  if (!a || el.tagName === "INPUT" || el.tagName === "SELECT") return;
+  const d = el.dataset;
+  if (a === "save") return save();
+  if (a === "pick") { picking = {p: d.p, k: d.k}; document.body.classList.add("picking"); return status(L("stPick")); }
+  if (a === "exit") { if (dirty && armed !== el) { armed = el; status(L("stDiscard"), true); return; }
+    armed = null; if (dirty) SITE = JSON.parse(snapshot); return exitEdit(); }
+  if (a === "s-prev" || a === "s-next") return goSlide(el.closest(".ph"), a === "s-next" ? 1 : -1);
+  if (a === "img-add") { pickFor = {p: d.p, r: d.r, s: d.s}; picker.click(); return; }
+  if (a === "vimeo") { const bar = el.parentElement; if ($(".vimeo-in", bar)) return $(".vimeo-in", bar).focus();
+    const inp = Object.assign(document.createElement("input"), {className: "vimeo-in", type: "url", placeholder: L("vimeoPh")}); bar.append(inp); inp.focus();
+    inp.addEventListener("keydown", ev => { if (ev.key === "Escape") inp.remove(); if (ev.key !== "Enter") return;
+      const m = inp.value.match(/(\d{6,})/); if (!m) return inp.select();
+      const sl = slotOf(el); sl.items = sl.items || []; delete sl.n; sl.items.push({vimeo: m[1]}); touch(); renderAll({key: d.p + "-" + d.r + "-" + d.s, i: sl.items.length - 1}); });
+    return; }
+  if (a === "p-del" && armed !== el) { armed = el; el.textContent = L("sure"); el.classList.add("warn"); setTimeout(() => { if (armed === el) { armed = null; el.textContent = L("delProject"); el.classList.remove("warn"); } }, 3000); return; }
+  armed = null;
+  if (!ACT[a]) return;
+  const after = ACT[a](d, el); touch(); renderAll(); if (typeof after === "function") after();
+});
+
+/* ───────── 저장 ───────── */
+const RESET = ":root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}";
+const pack = swap => JSON.stringify(SITE, (k, v) => k === "src" && swap.has(v) ? swap.get(v) : v);
+/* 이 페이지를 처음 만든 모양 그대로 다시 조립(화면에 그려진 결과가 아니라 원본 조각들에서) */
+function pageHtml(json) {
+  const reset = (document.head.querySelector("style:not([id])") || {}).textContent || RESET, end = "</" + "script>";
+  return `<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>${reset}</style></head><body>\n`
+    + `<title>${esc(document.title)}</title>\n` + $$("link[data-keep]").map(l => l.outerHTML).join("\n") + `\n<style id="css">${$("#css").textContent}</style>\n`
+    + `<template id="shell">${$("#shell").innerHTML}</template>\n<script type="application/json" id="site-data">${json.replace(/</g, "\\u003c")}${end}\n<script id="app">${$("#app").textContent}${end}\n</body></html>`;
+}
+const usedSrc = () => { const u = new Set(); JSON.stringify(SITE, (k, v) => { if (k === "src") u.add(v); return v; }); return u; };
+const toDataUrl = blob => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = rej; fr.readAsDataURL(blob); });
+async function save() {
+  status(L("stSaving"));
+  let art = null; try { art = window.claude && await window.claude.use("artifact"); } catch {}
+  if (!art) return status(L("stNoStore"), true);
+  SITE.rev = Date.now();
+  const used = usedSrc(), fresh = [...pending].filter(([u]) => used.has(u));
+  const fail = code => status(L({conflict: "stConflict", not_writer: "stReadOnly", not_granted: "stReadOnly", consent_required: "stReadOnly", not_declared: "stNoStore",
+    too_large: "stLarge", rate_limited: "stSlow"}[code] || "stFail"), true);
+  /* 1) 파일 저장: 내용은 data/site.json, 이미지는 img/… 로 따로. 화면은 그대로 유지됨 */
+  try {
+    const files = {}, swap = new Map();
+    for (const [u, blob] of fresh) { const path = "img/" + Date.now().toString(36) + Math.random().toString(36).slice(2, 8) + "." + ({"image/gif": "gif", "image/png": "png", "image/webp": "webp", "image/svg+xml": "svg"}[blob.type] || "jpg");
+      files[path] = blob; swap.set(u, path); }
+    files["data/site.json"] = pack(swap);
+    await art.publish(files);
+    SITE = JSON.parse(files["data/site.json"]); swap.forEach((path, u) => { alias.set(path, u); pending.delete(u); });
+    snapshot = JSON.stringify(SITE); dirty = false; renderAll(); return status(L("stSaved"));
+  } catch (err) {
+    const code = err && err.code;
+    if (!["capability_disabled", "capability_removed", "transform_error", "invalid_content", "read_only_path"].includes(code)) return fail(code);
+  }
+  /* 2) 파일 저장을 못 쓰는 화면: 이미지를 페이지 안에 넣어 페이지를 통째로 다시 저장. 저장 뒤 화면이 새로 열림 */
+  try {
+    const swap = new Map(); for (const [u, blob] of fresh) swap.set(u, await toDataUrl(blob));
+    try { sessionStorage.setItem("resume-edit", "1"); } catch {}
+    await art.publish(pageHtml(pack(swap)));
+  } catch (err) { try { sessionStorage.removeItem("resume-edit"); } catch {} fail(err && err.code); }
+}
+
+/* ───────── 시작: 저장된 내용이 있으면 그것부터 ───────── */
+function boot() {
+  if (booted) return; booted = true; renderAll(); route();
+  let resume = false; try { resume = sessionStorage.getItem("resume-edit") === "1"; sessionStorage.removeItem("resume-edit"); } catch {}
+  if (resume) enterEdit();
+}
+fetch("data/site.json", {cache: "no-store"}).then(r => r.ok ? r.json() : null).then(d => {
+  if (!d || !Array.isArray(d.projects) || (d.rev || 0) <= (SITE.rev || 0) || editing) return;
+  SITE = {...SITE, ...d}; if (booted) renderAll();
+}).catch(() => {}).finally(boot);
+setTimeout(boot, 1500);
+</script>
+</body>
+</html>
